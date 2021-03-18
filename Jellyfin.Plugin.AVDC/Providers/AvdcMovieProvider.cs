@@ -54,7 +54,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     OfficialRating = "XXX"
                 }
             };
-            AddStars(result, m.Stars);
+
+            foreach (var star in m.Stars)
+                result.AddPerson(new PersonInfo
+                {
+                    Name = star,
+                    Type = "Actor",
+                    ImageUrl = $"{Config.AvdcServer}{AvdcApi.People}{star}"
+                });
 
             result.QueriedById = true;
             result.HasMetadata = true;
@@ -78,17 +85,6 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     ImageUrl = $"{Config.AvdcServer}{AvdcApi.Primary}{m.Vid}"
                 }
             };
-        }
-
-        private void AddStars(MetadataResult<Movie> result, List<string> stars)
-        {
-            foreach (var name in stars)
-                result.AddPerson(new PersonInfo
-                {
-                    Name = name,
-                    Type = "Actor",
-                    ImageUrl = $"{Config.AvdcServer}{AvdcApi.People}{name}"
-                });
         }
     }
 }

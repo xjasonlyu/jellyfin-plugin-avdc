@@ -31,20 +31,18 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var m = await GetMetadata(item.FileNameWithoutExtension, cancellationToken);
             if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteImageInfo>();
 
-            var vid = m.Vid;
-
             return new List<RemoteImageInfo>
             {
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{AvdcApi.Primary}{vid}",
+                    Url = $"{Config.AvdcServer}{AvdcApi.Primary}{m.Vid}",
                     Type = ImageType.Primary
                 },
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{AvdcApi.Backdrop}{vid}",
+                    Url = $"{Config.AvdcServer}{AvdcApi.Backdrop}{m.Vid}",
                     Type = ImageType.Backdrop
                 }
             };
