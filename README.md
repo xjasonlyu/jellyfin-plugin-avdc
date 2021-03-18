@@ -1,0 +1,1 @@
+# AVDC Plugin for Jellyfin
