@@ -13,8 +13,8 @@
             <div class="content-primary">
                 <form id="AVDCConfigForm">
                     <div class="inputContainer">
-                        <label class="inputeLabel inputLabelUnfocused" for="AVDCServer">AVDC Server</label>
-                        <input id="AVDCServer" name="AVDCServer" type="text" is="emby-input" />
+                        <label class="inputeLabel inputLabelUnfocused" for="AvdcServer">AVDC Server</label>
+                        <input id="AvdcServer" name="AvdcServer" type="text" is="emby-input" />
                         <div class="fieldDescription">URL of Backend AVDC Server</div>
                     </div>
                     <div>
@@ -34,7 +34,7 @@
                 .addEventListener('pageshow', function () {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(AVDCConfig.pluginUniqueId).then(function (config) {
-                        document.querySelector('#AVDCServer').value = config.AVDCServer;
+                        document.querySelector('#AvdcServer').value = config.AvdcServer;
                         Dashboard.hideLoadingMsg();
                     });
                 });
@@ -43,7 +43,7 @@
                 .addEventListener('submit', function () {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(AVDCConfig.pluginUniqueId).then(function (config) {
-                        config.AVDCServer = document.querySelector('#AVDCServer').value;
+                        config.AvdcServer = document.querySelector('#AvdcServer').value;
                         ApiClient.updatePluginConfiguration(AVDCConfig.pluginUniqueId, config).then(function (result) {
                             Dashboard.processPluginConfigurationUpdateResult(result);
                         });
