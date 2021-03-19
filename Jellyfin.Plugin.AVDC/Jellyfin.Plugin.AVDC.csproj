@@ -3,8 +3,13 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>Jellyfin.Plugin.AVDC</RootNamespace>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <FileVersion>1.0.0.0</FileVersion>
+        <Version>$([System.DateTime]::Now.ToString(yyyy.MMdd.HHmm))</Version>
+        <Authors>xjasonlyu</Authors>
+        <Description>AVDC Metadata Provider for Jellyfin.</Description>
+        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc.git</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc/blob/main/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
