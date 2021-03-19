@@ -33,10 +33,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var m = await GetMetadata(info.Name, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
+            // Create Studios
             var studios = new List<string>();
             if (!string.IsNullOrWhiteSpace(m.Studio)) studios.Add(m.Studio);
 
-            var tagLine = !string.IsNullOrWhiteSpace(m.Series) ? m.Series : m.Label;
+            // Use Series or Label as Tagline
+            var tagline = !string.IsNullOrWhiteSpace(m.Series) ? m.Series : m.Label;
 
             var result = new MetadataResult<Movie>
             {
@@ -45,13 +47,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Name = $"{m.Vid} {m.Title}",
                     OriginalTitle = m.Title,
                     Overview = m.Overview,
-                    Tagline = tagLine,
+                    Tagline = tagline,
                     Genres = m.Genres.ToArray(),
                     Studios = studios.ToArray(),
-                    PremiereDate = m.ReleaseDate(),
-                    ProductionYear = m.ReleaseDate().Year,
+                    PremiereDate = m.Release,
+                    ProductionYear = m.Release.Year,
                     SortName = m.Vid,
-                    ForcedSortName = m.Vid,
                     ExternalId = m.Vid,
                     OfficialRating = "XXX"
                 }
@@ -70,9 +71,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 var actress = await GetActress(name, cancellationToken);
 
-                var url = !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
+                var url = actress != null && !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
                     ? $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
-                    : "";
+                    : string.Empty;
 
                 result.AddPerson(new PersonInfo
                 {
@@ -100,7 +101,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 new()
                 {
                     Name = $"{m.Vid} {m.Title}",
-                    ProductionYear = m.ReleaseDate().Year,
+                    ProductionYear = m.Release.Year,
                     ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 }
             };
