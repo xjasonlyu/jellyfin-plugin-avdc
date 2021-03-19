@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
+using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 using MediaBrowser.Model.Serialization;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
 
-            var m = await GetMetadata(info.Name, cancellationToken);
+            var infoName = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(infoName)) infoName = info.Name;
+
+            var m = await GetMetadata(infoName, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
@@ -56,10 +60,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Studios = studios.ToArray(),
                     PremiereDate = m.Release,
                     ProductionYear = m.Release.Year,
-                    SortName = m.Vid,
-                    ExternalId = m.Vid,
+                    ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
                     OfficialRating = "XXX"
-                }
+                },
+                HasMetadata = true
             };
 
             // Add Director
@@ -67,7 +71,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 result.AddPerson(new PersonInfo
                 {
                     Name = m.Director,
-                    Type = "Director"
+                    Type = PersonType.Director
                 });
 
             // Add Actresses
@@ -82,13 +86,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 result.AddPerson(new PersonInfo
                 {
                     Name = name,
-                    Type = "Actor",
+                    Type = PersonType.Actor,
                     ImageUrl = url
                 });
             }
 
-            result.QueriedById = true;
-            result.HasMetadata = true;
             return result;
         }
 
@@ -97,15 +99,19 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
 
-            var m = await GetMetadata(info.Name, cancellationToken);
+            var infoName = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(infoName)) infoName = info.Name;
+
+            var m = await GetMetadata(infoName, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {
                 new()
                 {
-                    Name = Utility.FormatName(m),
+                    Name = m.Vid,
                     ProductionYear = m.Release.Year,
+                    ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
                     ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 }
             };
