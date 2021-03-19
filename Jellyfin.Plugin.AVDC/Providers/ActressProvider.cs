@@ -30,10 +30,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetMetadata for actress: {info.Name}");
 
-            var actressId = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(actressId)) actressId = info.Name;
+            var name = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
-            var actress = await GetActress(actressId, cancellationToken);
+            var actress = await GetActress(name, cancellationToken);
             if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
                 return new MetadataResult<Person>();
 
@@ -53,10 +53,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] SearchResults for actress: {info.Name}");
 
-            var actressId = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(actressId)) actressId = info.Name;
+            var name = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
-            var actress = await GetActress(actressId, cancellationToken);
+            var actress = await GetActress(name, cancellationToken);
             if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
                 return new List<RemoteSearchResult>();
 

@@ -29,10 +29,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetImages for actress: {item.Name}");
 
-            var actressId = item.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(actressId)) actressId = item.Name;
+            var name = item.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(name)) name = item.Name;
 
-            var actress = await GetActress(actressId, cancellationToken);
+            var actress = await GetActress(name, cancellationToken);
             if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
                 return new List<RemoteImageInfo>();
 

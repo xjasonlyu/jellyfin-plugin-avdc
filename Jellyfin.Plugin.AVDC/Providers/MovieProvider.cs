@@ -31,10 +31,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
 
-            var metadataId = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(metadataId)) metadataId = info.Name;
+            var vid = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
 
-            var m = await GetMetadata(metadataId, cancellationToken);
+            var m = await GetMetadata(vid, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
@@ -99,17 +99,17 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
 
-            var metadataId = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(metadataId)) metadataId = info.Name;
+            var vid = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
 
-            var m = await GetMetadata(metadataId, cancellationToken);
+            var m = await GetMetadata(vid, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {
                 new()
                 {
-                    Name = m.Vid,
+                    Name = Utility.FormatName(m),
                     ProductionYear = m.Release.Year,
                     ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
                     ImageUrl = $"{Config.Server}{ApiPath.PrimaryImage}{m.Vid}"

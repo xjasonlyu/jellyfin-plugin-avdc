@@ -28,10 +28,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetImages for video: {item.Name}");
 
-            var metadataId = item.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(metadataId)) metadataId = item.FileNameWithoutExtension;
+            var vid = item.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(item.FileNameWithoutExtension);
 
-            var m = await GetMetadata(metadataId, cancellationToken);
+            var m = await GetMetadata(vid, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>

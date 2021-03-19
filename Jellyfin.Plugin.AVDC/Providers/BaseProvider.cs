@@ -32,12 +32,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return GetAsync(url, cancellationToken);
         }
 
-        protected async Task<Metadata> GetMetadata(string name, CancellationToken cancellationToken)
+        protected async Task<Metadata> GetMetadata(string vid, CancellationToken cancellationToken)
         {
-            var vid = Utility.ExtractVid(name);
             if (string.IsNullOrWhiteSpace(vid))
             {
-                Logger.LogError($"[AVDC] ExtractVid from \"{name}\" failed");
+                Logger.LogError($"[AVDC] invalid vid: \"{vid}\"");
                 return new Metadata();
             }
 
@@ -50,7 +49,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             }
             catch (Exception e)
             {
-                Logger.LogError($"[AVDC] GetMetadata for {name} failed: {e.Message}");
+                Logger.LogError($"[AVDC] GetMetadata for {vid} failed: {e.Message}");
                 return new Metadata();
             }
         }
