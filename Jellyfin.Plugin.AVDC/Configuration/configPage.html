@@ -1,57 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
     <title>AVDC</title>
 </head>
-
 <body>
-    <div id="AVDCConfigPage" data-role="page" class="page type-interior pluginConfigurationPage"
-        data-require="emby-input,emby-button,emby-select,emby-checkbox">
-        <div data-role="content">
-            <div class="content-primary">
-                <form id="AVDCConfigForm">
-                    <div class="inputContainer">
-                        <label class="inputeLabel inputLabelUnfocused" for="AvdcServer">AVDC Server</label>
-                        <input id="AvdcServer" name="AvdcServer" type="text" is="emby-input" />
-                        <div class="fieldDescription">URL of Backend AVDC Server</div>
-                    </div>
-                    <div>
-                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
-                            <span>Save</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="page type-interior pluginConfigurationPage musicBrainzConfigPage"
+     data-require="emby-input,emby-button,emby-checkbox"
+     data-role="page">
+    <div data-role="content">
+        <div class="content-primary">
+            <form class="avdcConfigForm">
+                <div class="inputContainer">
+                    <input id="server" is="emby-input" label="Server" required type="text"/>
+                    <div class="fieldDescription">URL of Backend AVDC Server.</div>
+                </div>
+                <br/>
+                <div>
+                    <button class="raised button-submit block" is="emby-button" type="submit"><span>Save</span></button>
+                </div>
+            </form>
         </div>
-        <script type="text/javascript">
-            var AVDCConfig = {
-                pluginUniqueId: '001c811c-145d-4b43-94bf-f78e8d7b6afd'
-            };
-
-            document.querySelector('#AVDCConfigPage')
-                .addEventListener('pageshow', function () {
-                    Dashboard.showLoadingMsg();
-                    ApiClient.getPluginConfiguration(AVDCConfig.pluginUniqueId).then(function (config) {
-                        document.querySelector('#AvdcServer').value = config.AvdcServer;
-                        Dashboard.hideLoadingMsg();
-                    });
-                });
-
-            document.querySelector('#AVDCConfigForm')
-                .addEventListener('submit', function () {
-                    Dashboard.showLoadingMsg();
-                    ApiClient.getPluginConfiguration(AVDCConfig.pluginUniqueId).then(function (config) {
-                        config.AvdcServer = document.querySelector('#AvdcServer').value;
-                        ApiClient.updatePluginConfiguration(AVDCConfig.pluginUniqueId, config).then(function (result) {
-                            Dashboard.processPluginConfigurationUpdateResult(result);
-                        });
-                    });
-                    return false;
-                });
-        </script>
     </div>
-</body>
+    <script type="text/javascript">
+        var AVDCPluginConfig = {
+            uniquePluginId: "001c811c-145d-4b43-94bf-f78e8d7b6afd"
+        };
 
+        document.querySelector('.musicBrainzConfigPage')
+            .addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(AVDCPluginConfig.uniquePluginId).then(function (config) {
+                    var server = document.querySelector('#server');
+                    server.value = config.Server;
+                    server.dispatchEvent(new Event('change', {
+                        bubbles: true,
+                        cancelable: false
+                    }));
+
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+        document.querySelector('.avdcConfigForm')
+            .addEventListener('submit', function (e) {
+                Dashboard.showLoadingMsg();
+
+                ApiClient.getPluginConfiguration(AVDCPluginConfig.uniquePluginId).then(function (config) {
+                    config.Server = document.querySelector('#server').value;
+
+                    ApiClient.updatePluginConfiguration(AVDCPluginConfig.uniquePluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
+                });
+
+                e.preventDefault();
+                return false;
+            });
+    </script>
+</div>
+</body>
 </html>

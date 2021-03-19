@@ -66,7 +66,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     Name = actress.Name,
                     ProviderIds = new Dictionary<string, string> {{Name, actress.Name}},
-                    ImageUrl = $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
+                    ImageUrl = $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
                 }
             };
         }

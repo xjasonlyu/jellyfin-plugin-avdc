@@ -42,7 +42,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
-                    Url = $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
+                    Url = $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
                 }
             };
         }

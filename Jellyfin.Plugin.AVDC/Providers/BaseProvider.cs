@@ -41,7 +41,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 return new Metadata();
             }
 
-            var url = $"{Config.AvdcServer}{ApiPath.Metadata}{vid}";
+            var url = $"{Config.Server}{ApiPath.Metadata}{vid}";
 
             try
             {
@@ -57,7 +57,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         protected async Task<Actress> GetActress(string name, CancellationToken cancellationToken)
         {
-            var url = $"{Config.AvdcServer}{ApiPath.Actress}{name}";
+            var url = $"{Config.Server}{ApiPath.Actress}{name}";
 
             try
             {

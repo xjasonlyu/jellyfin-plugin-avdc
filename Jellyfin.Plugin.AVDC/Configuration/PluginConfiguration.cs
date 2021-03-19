@@ -4,11 +4,12 @@ namespace Jellyfin.Plugin.AVDC.Configuration
 {
     public class PluginConfiguration : BasePluginConfiguration
     {
-        public PluginConfiguration()
-        {
-            AvdcServer = "http://avdc.internal:5000";
-        }
+        private string _server = "http://avdc.internal:5000";
 
-        public string AvdcServer { get; set; }
+        public string Server
+        {
+            get => _server;
+            set => _server = value.TrimEnd('/');
+        }
     }
 }

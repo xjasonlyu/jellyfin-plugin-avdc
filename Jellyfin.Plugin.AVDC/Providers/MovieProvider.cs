@@ -80,7 +80,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 var actress = await GetActress(name, cancellationToken);
 
                 var url = actress != null && !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
-                    ? $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
+                    ? $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
                     : string.Empty;
 
                 result.AddPerson(new PersonInfo
@@ -112,7 +112,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Name = m.Vid,
                     ProductionYear = m.Release.Year,
                     ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
-                    ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
+                    ImageUrl = $"{Config.Server}{ApiPath.PrimaryImage}{m.Vid}"
                 }
             };
         }
