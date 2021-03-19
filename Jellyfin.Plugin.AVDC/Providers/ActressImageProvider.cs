@@ -23,13 +23,16 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public int Order => 1;
 
-        public string Name => $"{Plugin.Instance.Name} Actress";
+        public string Name => Plugin.Instance.Name;
 
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
         {
             Logger.LogInformation($"[AVDC] GetImages for actress: {item.Name}");
 
-            var actress = await GetActress(item.Name, cancellationToken);
+            var actressId = item.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(actressId)) actressId = item.Name;
+
+            var actress = await GetActress(actressId, cancellationToken);
             if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
                 return new List<RemoteImageInfo>();
 
