@@ -48,7 +48,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 Item = new Movie
                 {
-                    Name = $"{m.Vid} {m.Title}",
+                    Name = Utility.FormatName(m),
                     OriginalTitle = m.Title,
                     Overview = m.Overview,
                     Tagline = tagline,
@@ -104,7 +104,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 new()
                 {
-                    Name = $"{m.Vid} {m.Title}",
+                    Name = Utility.FormatName(m),
                     ProductionYear = m.Release.Year,
                     ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 }
