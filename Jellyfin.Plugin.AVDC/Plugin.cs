@@ -17,7 +17,11 @@ namespace Jellyfin.Plugin.AVDC
         }
 
         public override string Name => "AVDC";
+
+        public override string Description => "AVDC Metadata Provider for Jellyfin.";
+
         public override Guid Id => Guid.Parse("001c811c-145d-4b43-94bf-f78e8d7b6afd");
+
         public static Plugin Instance { get; private set; }
 
         public IEnumerable<PluginPageInfo> GetPages()
