@@ -39,14 +39,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}",
-                    Type = ImageType.Primary
+                    Type = ImageType.Primary,
+                    Url = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 },
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{ApiPath.BackdropImage}{m.Vid}",
-                    Type = ImageType.Backdrop
+                    Type = ImageType.Backdrop,
+                    Url = $"{Config.AvdcServer}{ApiPath.BackdropImage}{m.Vid}"
                 }
             };
         }
