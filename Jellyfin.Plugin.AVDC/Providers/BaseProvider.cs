@@ -9,22 +9,23 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
-    public static class AvdcApi
+    public static class ApiPath
     {
         public const string Metadata = "/metadata/";
-        public const string People = "/image/people/";
-        public const string Primary = "/image/primary/";
-        public const string Backdrop = "/image/backdrop/";
+        public const string Actress = "/actress/";
+        public const string ActressImage = "/image/actress/";
+        public const string PrimaryImage = "/image/primary/";
+        public const string BackdropImage = "/image/backdrop/";
     }
 
-    public abstract class AvdcBaseProvider
+    public abstract class BaseProvider
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IJsonSerializer _jsonSerializer;
         protected readonly PluginConfiguration Config;
         protected readonly ILogger Logger;
 
-        protected AvdcBaseProvider(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer, ILogger logger)
+        protected BaseProvider(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
             _jsonSerializer = jsonSerializer;
@@ -45,7 +46,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             // Simply use first value
             var vid = name.Split(' ', 2)[0];
 
-            var url = $"{Config.AvdcServer}{AvdcApi.Metadata}{vid}";
+            var url = $"{Config.AvdcServer}{ApiPath.Metadata}{vid}";
 
             try
             {
@@ -56,6 +57,22 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 Logger.LogError($"[AVDC] GetMetadata failed: {e.Message}");
                 return new Metadata();
+            }
+        }
+
+        protected async Task<Actress> GetActress(string name, CancellationToken cancellationToken)
+        {
+            var url = $"{Config.AvdcServer}{ApiPath.Actress}{name}";
+
+            try
+            {
+                var contentStream = await GetStream(url, cancellationToken);
+                return await _jsonSerializer.DeserializeFromStreamAsync<Actress>(contentStream);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"[AVDC] GetActress failed: {e.Message}");
+                return new Actress();
             }
         }
 

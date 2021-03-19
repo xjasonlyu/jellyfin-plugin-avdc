@@ -12,37 +12,37 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
-    public class AvdcImageProvider : AvdcBaseProvider, IRemoteImageProvider, IHasOrder
+    public class ImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
     {
-        public AvdcImageProvider(IHttpClientFactory httpClientFactory,
+        public ImageProvider(IHttpClientFactory httpClientFactory,
             IJsonSerializer jsonSerializer,
-            ILogger<AvdcImageProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
+            ILogger<ImageProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
         {
             // Empty
         }
 
         public int Order => 1;
-        public string Name => "AVDC";
+        public string Name => Plugin.Instance.Name;
 
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
         {
             Logger.LogInformation($"[AVDC] GetImages for video: {item.Name}");
 
             var m = await GetMetadata(item.FileNameWithoutExtension, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteImageInfo>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
             {
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{AvdcApi.Primary}{m.Vid}",
+                    Url = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}",
                     Type = ImageType.Primary
                 },
                 new()
                 {
                     ProviderName = Name,
-                    Url = $"{Config.AvdcServer}{AvdcApi.Backdrop}{m.Vid}",
+                    Url = $"{Config.AvdcServer}{ApiPath.BackdropImage}{m.Vid}",
                     Type = ImageType.Backdrop
                 }
             };

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,18 +12,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
-    public class AvdcMovieProvider : AvdcBaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
+    public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
     {
-        public AvdcMovieProvider(IHttpClientFactory httpClientFactory,
+        public MovieProvider(IHttpClientFactory httpClientFactory,
             IJsonSerializer jsonSerializer,
-            ILogger<AvdcMovieProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
+            ILogger<MovieProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
         {
             // Empty
         }
 
         public int Order => 1;
 
-        public string Name => "AVDC";
+        public string Name => Plugin.Instance.Name;
 
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)
@@ -31,37 +31,56 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
 
             var m = await GetMetadata(info.Name, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new MetadataResult<Movie>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
-            var releaseDate = DateTime.Parse(m.Release);
             var studios = new List<string>();
             if (!string.IsNullOrWhiteSpace(m.Studio)) studios.Add(m.Studio);
+
+            var tagLine = !string.IsNullOrWhiteSpace(m.Series) ? m.Series : m.Label;
 
             var result = new MetadataResult<Movie>
             {
                 Item = new Movie
                 {
                     Name = $"{m.Vid} {m.Title}",
-                    Overview = m.Overview,
                     OriginalTitle = m.Title,
+                    Overview = m.Overview,
+                    Tagline = tagLine,
                     Genres = m.Genres.ToArray(),
-                    PremiereDate = releaseDate,
-                    ProductionYear = releaseDate.Year,
+                    Studios = studios.ToArray(),
+                    PremiereDate = m.ReleaseDate(),
+                    ProductionYear = m.ReleaseDate().Year,
                     SortName = m.Vid,
                     ForcedSortName = m.Vid,
                     ExternalId = m.Vid,
-                    Studios = studios.ToArray(),
                     OfficialRating = "XXX"
                 }
             };
 
-            foreach (var star in m.Stars)
+            // Add Director
+            if (!string.IsNullOrWhiteSpace(m.Director))
                 result.AddPerson(new PersonInfo
                 {
-                    Name = star,
-                    Type = "Actor",
-                    ImageUrl = $"{Config.AvdcServer}{AvdcApi.People}{star}"
+                    Name = m.Director,
+                    Type = "Director"
                 });
+
+            // Add Actresses
+            foreach (var name in m.Actresses)
+            {
+                var actress = await GetActress(name, cancellationToken);
+
+                var url = !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
+                    ? $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
+                    : "";
+
+                result.AddPerson(new PersonInfo
+                {
+                    Name = name,
+                    Type = "Actor",
+                    ImageUrl = url
+                });
+            }
 
             result.QueriedById = true;
             result.HasMetadata = true;
@@ -74,15 +93,15 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation($"[AVDC] SearchMetadata for video: {info.Name}");
 
             var m = await GetMetadata(info.Name, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteSearchResult>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {
                 new()
                 {
                     Name = $"{m.Vid} {m.Title}",
-                    ProductionYear = m.Year,
-                    ImageUrl = $"{Config.AvdcServer}{AvdcApi.Primary}{m.Vid}"
+                    ProductionYear = m.ReleaseDate().Year,
+                    ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 }
             };
         }
