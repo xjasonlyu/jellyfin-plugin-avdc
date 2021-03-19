@@ -34,8 +34,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         protected async Task<Metadata> GetMetadata(string name, CancellationToken cancellationToken)
         {
-            // Simply use first value
-            var vid = name.Split(' ', 2)[0];
+            var vid = Utility.ExtractVid(name);
+            if (string.IsNullOrWhiteSpace(vid))
+            {
+                Logger.LogError($"[AVDC] ExtractVid from \"{name}\" failed");
+                return new Metadata();
+            }
 
             var url = $"{Config.AvdcServer}{ApiPath.Metadata}{vid}";
 

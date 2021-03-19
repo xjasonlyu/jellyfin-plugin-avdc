@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using MediaBrowser.Controller.Providers;
 
 namespace Jellyfin.Plugin.AVDC
@@ -12,5 +13,10 @@ namespace Jellyfin.Plugin.AVDC
             // Simply check if filename contains `-C`
             return filename?.ToUpper().Replace("CD", "").Contains("-C") ?? false;
         }
+
+        public static string ExtractVid(string name)
+        {
+            return name.Split(' ', 2).FirstOrDefault();
+        } 
     }
 }
