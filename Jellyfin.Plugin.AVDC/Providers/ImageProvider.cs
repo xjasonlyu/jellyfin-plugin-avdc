@@ -29,7 +29,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation($"[AVDC] GetImages for video: {item.Name}");
 
             var m = await GetMetadata(item.FileNameWithoutExtension, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteImageInfo>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
             {

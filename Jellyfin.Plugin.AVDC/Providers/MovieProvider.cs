@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
 
             var m = await GetMetadata(info.Name, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new MetadataResult<Movie>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
             if (Utility.HasChineseSubtitle(info) && !m.Genres.Contains("中文字幕"))
@@ -39,10 +39,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
             // Create Studios
             var studios = new List<string>();
-            if (!string.IsNullOrEmpty(m.Studio)) studios.Add(m.Studio);
+            if (!string.IsNullOrWhiteSpace(m.Studio)) studios.Add(m.Studio);
 
             // Use Series or Label as Tagline
-            var tagline = !string.IsNullOrEmpty(m.Series) ? m.Series : m.Label;
+            var tagline = !string.IsNullOrWhiteSpace(m.Series) ? m.Series : m.Label;
 
             var result = new MetadataResult<Movie>
             {
@@ -63,7 +63,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             };
 
             // Add Director
-            if (!string.IsNullOrEmpty(m.Director))
+            if (!string.IsNullOrWhiteSpace(m.Director))
                 result.AddPerson(new PersonInfo
                 {
                     Name = m.Director,
@@ -75,7 +75,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 var actress = await GetActress(name, cancellationToken);
 
-                var url = actress != null && !string.IsNullOrEmpty(actress.Name) && actress.Images.Any()
+                var url = actress != null && !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
                     ? $"{Config.AvdcServer}{ApiPath.ActressImage}{actress.Name}"
                     : string.Empty;
 
@@ -98,7 +98,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
 
             var m = await GetMetadata(info.Name, cancellationToken);
-            if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteSearchResult>();
+            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {
