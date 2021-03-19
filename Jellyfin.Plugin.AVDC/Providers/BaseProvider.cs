@@ -9,15 +9,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
-    public static class ApiPath
-    {
-        public const string Metadata = "/metadata/";
-        public const string Actress = "/actress/";
-        public const string ActressImage = "/image/actress/";
-        public const string PrimaryImage = "/image/primary/";
-        public const string BackdropImage = "/image/backdrop/";
-    }
-
     public abstract class BaseProvider
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -55,7 +46,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             }
             catch (Exception e)
             {
-                Logger.LogError($"[AVDC] GetMetadata failed: {e.Message}");
+                Logger.LogError($"[AVDC] GetMetadata for {name} failed: {e.Message}");
                 return new Metadata();
             }
         }
@@ -71,7 +62,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             }
             catch (Exception e)
             {
-                Logger.LogError($"[AVDC] GetActress failed: {e.Message}");
+                Logger.LogError($"[AVDC] GetActress for {name} failed: {e.Message}");
                 return new Actress();
             }
         }
