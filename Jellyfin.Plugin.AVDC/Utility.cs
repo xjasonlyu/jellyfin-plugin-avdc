@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 using MediaBrowser.Controller.Providers;
 
 namespace Jellyfin.Plugin.AVDC
@@ -8,7 +7,7 @@ namespace Jellyfin.Plugin.AVDC
     {
         public static string ExtractVid(string name)
         {
-            return name.Split(' ', 2).FirstOrDefault();
+            return name; // do nothing
         }
 
         public static string FormatName(Metadata m)
