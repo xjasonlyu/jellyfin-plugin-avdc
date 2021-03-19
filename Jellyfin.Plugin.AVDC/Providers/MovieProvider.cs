@@ -31,10 +31,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
 
-            var infoName = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(infoName)) infoName = info.Name;
+            var metadataId = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(metadataId)) metadataId = info.Name;
 
-            var m = await GetMetadata(infoName, cancellationToken);
+            var m = await GetMetadata(metadataId, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
@@ -99,10 +99,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
 
-            var infoName = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(infoName)) infoName = info.Name;
+            var metadataId = info.GetProviderId(Name);
+            if (string.IsNullOrWhiteSpace(metadataId)) metadataId = info.Name;
 
-            var m = await GetMetadata(infoName, cancellationToken);
+            var m = await GetMetadata(metadataId, cancellationToken);
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
