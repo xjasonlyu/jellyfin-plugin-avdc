@@ -96,7 +96,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             MovieInfo info, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] SearchMetadata for video: {info.Name}");
+            Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
 
             var m = await GetMetadata(info.Name, cancellationToken);
             if (m == null || string.IsNullOrEmpty(m.Vid)) return new List<RemoteSearchResult>();
