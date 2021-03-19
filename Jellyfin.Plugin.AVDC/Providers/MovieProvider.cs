@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -32,6 +33,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
             var m = await GetMetadata(info.Name, cancellationToken);
             if (m == null || string.IsNullOrEmpty(m.Vid)) return new MetadataResult<Movie>();
+
+            // Add `中文字幕` Genre
+            if (HasChineseSubtitle(info.Path) && !m.Genres.Contains("中文字幕"))
+                m.Genres.Add("中文字幕");
 
             // Create Studios
             var studios = new List<string>();
@@ -105,6 +110,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     ImageUrl = $"{Config.AvdcServer}{ApiPath.PrimaryImage}{m.Vid}"
                 }
             };
+        }
+
+        private static bool HasChineseSubtitle(string path)
+        {
+            var filename = Path.GetFileNameWithoutExtension(path);
+
+            // Simply check if filename contains `-C`
+            return filename.ToUpper().Replace("CD", "").Contains("-C");
         }
     }
 }
