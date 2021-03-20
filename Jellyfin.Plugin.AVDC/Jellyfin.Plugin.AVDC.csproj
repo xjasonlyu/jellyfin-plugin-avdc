@@ -5,7 +5,7 @@
         <RootNamespace>Jellyfin.Plugin.AVDC</RootNamespace>
         <Version>$([System.DateTime]::Now.ToString(yyyy.MMdd.HHmm))</Version>
         <Authors>xjasonlyu</Authors>
-        <Description>AVDC Metadata Provider for Jellyfin.</Description>
+        <Description>AVDC Metadata Provider for Jellyfin</Description>
         <RepositoryType>Git</RepositoryType>
         <RepositoryUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc.git</RepositoryUrl>
         <PackageProjectUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc</PackageProjectUrl>
