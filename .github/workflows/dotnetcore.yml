@@ -45,7 +45,7 @@ jobs:
 
       - name: Generate Manifest
         run: |
-          python3 package.py Jellyfin.Plugin.AVDC.zip ${{ steps.shell.outputs.version }} > manifest.json
+          python3 package.py Jellyfin.Plugin.AVDC.zip ${{ steps.shell.outputs.version }}
 
       - name: Commit Change
         run: |

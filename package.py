@@ -32,7 +32,8 @@ def main():
         generate(filename, version)
     )
 
-    print(json.dumps(manifest, indent=2))
+    with open('manifest.json', 'w') as f:
+        json.dump(manifest, f, indent=2)
 
 
 if __name__ == '__main__':
