@@ -3,7 +3,7 @@
     "category": "Metadata",
     "guid": "001c811c-145d-4b43-94bf-f78e8d7b6afd",
     "name": "AVDC",
-    "description": "AVDC Metadata Provider for Jellyfin",
+    "description": "This metadata provider helps fill Jellyfin with information for your adult videos by AVDC.",
     "owner": "xjasonlyu",
     "overview": "AVDC Metadata Provider for Jellyfin",
     "versions": [

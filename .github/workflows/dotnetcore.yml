@@ -43,7 +43,7 @@ jobs:
           git config --local user.name  "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add manifest.json
-          git commit -m "Auto Updated by Bot"
+          git commit -m "Auto Updated by Actions"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -57,6 +57,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: Jellyfin.Plugin.AVDC.zip
-          body: Auto Released by Bot
+          body: Auto Released by Actions
           draft: false
           tag_name: v${{ steps.shell.outputs.version }}
