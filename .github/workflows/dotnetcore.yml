@@ -1,0 +1,41 @@
+name: Build Plugin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+#      - name: Setup Python
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: '3.x'
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Publish
+        run: dotnet publish --configuration Release --output bin
+
+      - name: Zip Plugin
+        run: zip -j Jellyfin.Plugin.AVDC.zip bin/Jellyfin.Plugin.AVDC.dll
+
+      - name: Extract Version
+        id: shell
+        run: |
+          echo ::set-output name=version::$(cat bin/Jellyfin.Plugin.AVDC.deps.json | jq -r \
+            '.targets | map(select(keys_unsorted[0]))[0] | keys_unsorted[0]' | cut -d'/' -f2)
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: Jellyfin.Plugin.AVDC.zip
+          draft: true
+          tag_name: ${{ steps.shell.outputs.version }}
