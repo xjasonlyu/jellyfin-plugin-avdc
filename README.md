@@ -2,10 +2,17 @@
 
 ~~Jellyfin里的小姐姐总得有个身份~~
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
+![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/xjasonlyu/jellyfin-plugin-avdc)
+
+----------
+
 ## 特性支持
 
 - 影片元数据刮削
 - 影片元数据搜索
+- 十分详细的信息
 - 女优头像自动匹配
 - 女优头像搜索替换
 - 封面**自动人脸识别**
@@ -28,7 +35,7 @@ Jellyfin >= 10.7.0
 
 ### 使用
 
-> 因为AVDC服务端会存储视频元数据，封面数据，流量可能较大，所以为了丝滑的体验，
+> 因为AVDC服务端会存储影片元数据和封面，所以为了丝滑的体验
 > 暂不提供公益服，需要的可以自建。
 
 - 开始刮削之前，请先确保`AVDC`后端服务器正确安装，详见这篇[README](https://github.com/xjasonlyu/AVDC/blob/main/README.md)
@@ -37,7 +44,7 @@ Jellyfin >= 10.7.0
 
 ### Docker
 
-推荐使用Docker，可以免去配置AVDC服务器的麻烦
+推荐使用Docker，可以免去配置`AVDC`服务器的麻烦
 
 ```yaml
 version: '2.4'
@@ -93,13 +100,13 @@ docker-compose up -d
 
 ### 例如
 
-- ABP-233.mp4
-- ABP-233-C.mp4
-- ABP-233-C-cd1.mp4
+- `ABP-233.mp4`
+- `ABP-233-C.mp4`
+- `ABP-233-C-cd1.mp4`
 
 ## Providers
 
-- [Avsox](https://tellme.pw/avsox)
+- [AVSOX](https://tellme.pw/avsox)
 - [Jav321](https://www.jav321.com/)
 - [JavBus](https://www.javbus.com/)
 - [JavDB](https://javdb.com/)
