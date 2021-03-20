@@ -12,7 +12,7 @@ namespace Jellyfin.Plugin.AVDC
 
         public static string FormatName(Metadata m)
         {
-            return $"{m.Vid} {m.Title}";
+            return m.Vid.Contains('.') ? m.Vid : $"{m.Vid} {m.Title}";
         }
 
         public static bool HasChineseSubtitle(MovieInfo info)
