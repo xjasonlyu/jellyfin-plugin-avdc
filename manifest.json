@@ -6,8 +6,6 @@
     "description": "AVDC Metadata Provider for Jellyfin",
     "owner": "xjasonlyu",
     "overview": "AVDC Metadata Provider for Jellyfin",
-    "versions": [
-      {}
-    ]
+    "versions": []
   }
 ]
