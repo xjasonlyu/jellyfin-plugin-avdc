@@ -14,6 +14,10 @@
                     <input id="server" is="emby-input" label="Server" required type="text"/>
                     <div class="fieldDescription">URL of Backend AVDC Server.</div>
                 </div>
+                <div class="inputContainer">
+                    <input id="token" is="emby-input" label="Token" type="text"/>
+                    <div class="fieldDescription">Token for AVDC Server.</div>
+                </div>
                 <div>
                     <button class="raised button-submit block" is="emby-button" type="submit"><span>Save</span></button>
                 </div>
@@ -36,6 +40,13 @@
                         cancelable: false
                     }));
 
+                    var token = document.querySelector('#token');
+                    token.value = config.Token;
+                    token.dispatchEvent(new Event('change', {
+                        bubbles: true,
+                        cancelable: false
+                    }));
+
                     Dashboard.hideLoadingMsg();
                 });
             });
@@ -46,6 +57,7 @@
 
                 ApiClient.getPluginConfiguration(AVDCPluginConfig.uniquePluginId).then(function (config) {
                     config.Server = document.querySelector('#server').value;
+                    config.Token = document.querySelector('#token').value;
 
                     ApiClient.updatePluginConfiguration(AVDCPluginConfig.uniquePluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
                 });

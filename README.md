@@ -26,21 +26,22 @@
 
 Jellyfin >= 10.7.0
 
-### 安装
+### 插件安装
 
 - 进入Jellyfin控制台，Plugins -> Repositories
 - 添加URL：[manifest.json](https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/manifest.json)
 - 在Catalog下找到AVDC，安装最新版
 - 重启Jellyfin（⚠️）
 
-### 使用
+### 配置使用
 
 > 因为AVDC服务端会存储影片元数据和封面，所以为了丝滑的体验
 > 暂不提供公益服，需要的可以自建。
 
 - 开始刮削之前，请先确保`AVDC`后端服务器正确安装，详见这篇[README](https://github.com/xjasonlyu/AVDC/blob/main/README.md)
 - 在插件配置页面下填入搭建的`AVDC`的服务器地址
-- 如果重新配置了地址，重启Jellyfin（⚠️）
+- 填入服务端验证Token（如果需要的话）
+- 重启Jellyfin（⚠️）
 
 ### Docker
 

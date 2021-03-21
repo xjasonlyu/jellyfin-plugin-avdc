@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
@@ -77,6 +78,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
             cancellationToken.ThrowIfCancellationRequested();
 
             var httpClient = _httpClientFactory.CreateClient();
+
+            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", Config.Token);
+
             var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
