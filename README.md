@@ -41,7 +41,6 @@ Jellyfin >= 10.7.0
 - 开始刮削之前，请先确保`AVDC`后端服务器正确安装，详见这篇[README](https://github.com/xjasonlyu/AVDC/blob/main/README.md)
 - 在插件配置页面下填入搭建的`AVDC`的服务器地址
 - 填入服务端验证Token（如果需要的话）
-- 重启Jellyfin（⚠️）
 
 ### Docker
 
