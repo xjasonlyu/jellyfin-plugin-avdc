@@ -28,7 +28,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public Task<HttpResponseMessage> GetImageResponse(string url, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] GetImageResponse for url: {url}");
+            Logger.LogInformation("[AVDC] GetImageResponse for url: {Url}", url);
 
             return GetAsync(url, cancellationToken);
         }
@@ -37,7 +37,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             if (string.IsNullOrWhiteSpace(vid))
             {
-                Logger.LogError($"[AVDC] invalid vid: \"{vid}\"");
+                Logger.LogError("[AVDC] invalid vid: \"{Vid}\"", vid);
                 return new Metadata();
             }
 
@@ -50,7 +50,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             }
             catch (Exception e)
             {
-                Logger.LogError($"[AVDC] GetMetadata for {vid} failed: {e.Message}");
+                Logger.LogError("[AVDC] GetMetadata for {Vid} failed: {Message}", vid, e.Message);
                 return new Metadata();
             }
         }
@@ -66,14 +66,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
             }
             catch (Exception e)
             {
-                Logger.LogError($"[AVDC] GetActress for {name} failed: {e.Message}");
+                Logger.LogError("[AVDC] GetActress for {Name} failed: {Message}", name, e.Message);
                 return new Actress();
             }
         }
 
         private async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken)
         {
-            Logger.LogDebug($"[AVDC] HTTP request to: {url}");
+            Logger.LogDebug("[AVDC] HTTP request to: {Url}", url);
 
             cancellationToken.ThrowIfCancellationRequested();
 

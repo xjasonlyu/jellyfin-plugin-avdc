@@ -26,7 +26,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] GetImages for video: {item.Name}");
+            Logger.LogInformation("[AVDC] GetImages for video: {Name}", item.Name);
 
             var vid = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(item.FileNameWithoutExtension);

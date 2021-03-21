@@ -29,7 +29,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] GetMetadata for video: {info.Name}");
+            Logger.LogInformation("[AVDC] GetMetadata for video: {Name}", info.Name);
 
             var vid = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
@@ -97,7 +97,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             MovieInfo info, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] SearchResults for video: {info.Name}");
+            Logger.LogInformation("[AVDC] SearchResults for video: {Name}", info.Name);
 
             var vid = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);

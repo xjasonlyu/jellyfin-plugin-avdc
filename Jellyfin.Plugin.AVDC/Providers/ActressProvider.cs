@@ -28,7 +28,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<MetadataResult<Person>> GetMetadata(PersonLookupInfo info,
             CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] GetMetadata for actress: {info.Name}");
+            Logger.LogInformation("[AVDC] GetMetadata for actress: {Name}", info.Name);
 
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
@@ -51,7 +51,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             PersonLookupInfo info, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] SearchResults for actress: {info.Name}");
+            Logger.LogInformation("[AVDC] SearchResults for actress: {Name}", info.Name);
 
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;

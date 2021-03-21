@@ -27,7 +27,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"[AVDC] GetImages for actress: {item.Name}");
+            Logger.LogInformation("[AVDC] GetImages for actress: {Name}", item.Name);
 
             var name = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = item.Name;
