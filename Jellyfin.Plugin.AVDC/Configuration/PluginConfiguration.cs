@@ -4,24 +4,19 @@ namespace Jellyfin.Plugin.AVDC.Configuration
 {
     public class PluginConfiguration : BasePluginConfiguration
     {
-        /// <summary>
-        ///     The default AVDC server address.
-        /// </summary>
-        public const string DefaultServer = "http://avdc.internal:5000";
-
-        private string _server = DefaultServer;
-
-        /// <summary>
-        ///     Gets or sets the configured AVDC server address.
-        /// </summary>
-        public string Server
+        public PluginConfiguration()
         {
-            get => _server;
-            set => _server = value.TrimEnd('/');
+            Server = "http://avdc.internal:5000";
+            Token = string.Empty;
         }
 
         /// <summary>
-        ///     Gets or sets token for AVDC server API.
+        ///     Gets or sets the AVDC server URL.
+        /// </summary>
+        public string Server { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the AVDC server API token.
         /// </summary>
         public string Token { get; set; }
     }
