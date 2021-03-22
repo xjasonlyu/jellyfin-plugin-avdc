@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.AVDC
                 new PluginPageInfo
                 {
                     Name = Name,
-                    EmbeddedResourcePath = string.Format("{0}.Configuration.configPage.html", GetType().Namespace)
+                    EmbeddedResourcePath = $"{GetType().Namespace}.Configuration.configPage.html"
                 }
             };
         }
