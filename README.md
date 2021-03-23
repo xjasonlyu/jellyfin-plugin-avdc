@@ -1,6 +1,6 @@
 # AVDC Plugin for Jellyfin
 
-~~Jellyfin里的小姐姐总得有个身份~~
+~~硬盘里的小姐姐总得有个身份~~
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
 ![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
@@ -8,87 +8,47 @@
 
 ----------
 
-## 特性支持
+## 功能
 
-- 影片元数据刮削
+- 影片元数据刮削，包括：
+  - 标题
+  - 简介
+  - 类型
+  - 工作室
+  - 导演
+  - 演员
+  - 海报/封面
 - 影片元数据搜索
-- 十分详细的信息
-- 女优头像自动匹配
-- 女优头像搜索替换
+- 自动匹配女优头像
+- 手动搜索女优头像
 - 封面**自动人脸识别**
 - 超级快的刮削速度
 
-## 效果预览
+## 截图
 
-🈚️🍑🈚️🍑🈚️🍑🈚️🍑🈚️🍑🈚️🍑
+见➡️：[效果预览](preview/README.md)
 
-## Quickstart
+## 安装
 
 Jellyfin >= 10.7.0
 
-### 插件安装
+### 插件
 
-- 进入Jellyfin控制台，Plugins -> Repositories
-- 添加URL：[manifest.json](https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/manifest.json)
-- 在Catalog下找到AVDC，安装最新版
-- 重启Jellyfin（⚠️）
+- Jellyfin控制台
+  - Plugins -> Repositories
+  - 添加URL：[manifest.json](https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/manifest.json)
+  - 在Catalog下找到AVDC，安装最新版
+  - 重启Jellyfin（⚠️）
+  - 在媒体库设置中勾选AVDC（☑️）
 
-### 配置使用
+### 配置
 
-> 因为AVDC服务端会存储影片元数据和封面，所以为了丝滑的体验
-> 暂不提供公益服，需要的可以自建。
-
-- 开始刮削之前，请先确保`AVDC`后端服务器正确安装，详见这篇[README](https://github.com/xjasonlyu/AVDC/blob/main/README.md)
-- 在插件配置页面下填入搭建的`AVDC`的服务器地址
-- 填入服务端验证Token（如果需要的话）
-
-### Docker
-
-推荐使用Docker，可以免去配置`AVDC`服务器的麻烦
-
-```yaml
-version: '2.4'
-
-services:
-  avdc:
-    image: ghcr.io/xjasonlyu/avdc:latest
-    environment:
-      - HTTP_PROXY=http://192.168.1.1:1080
-      - HTTPS_PROXY=http://192.168.1.1:1080
-    ports:
-      - 5000:5000
-    volumes:
-      - ./avdc.db:/avdc.db
-    networks:
-      tunnel:
-        aliases:
-          - avdc.internal
-    restart: unless-stopped
-    container_name: avdc
-
-  jellyfin:
-    image: ghcr.io/linuxserver/jellyfin:latest
-    logging:
-      driver: none
-    devices:
-      - /dev/dri:/dev/dri
-    volumes:
-      - ...
-    networks:
-      - tunnel
-    restart: unless-stopped
-    container_name: jellyfin
-
-networks:
-  tunnel:
-    driver: bridge
-```
-
-根据需要更改docker-compose.yml的参数，然后直接up
-
-```text
-docker-compose up -d
-```
+- AVDC-API服务端搭建
+  - [本地安装](https://github.com/xjasonlyu/avdc-api/wiki/%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85)
+  - [Docker安装（推荐）](https://github.com/xjasonlyu/avdc-api/wiki/Docker%E5%AE%89%E8%A3%85%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89)
+  - [群晖安装（十分推荐）](https://github.com/xjasonlyu/avdc-api/wiki/Synology-%E7%BE%A4%E6%99%96%E5%AE%89%E8%A3%85%EF%BC%88%E5%8D%81%E5%88%86%E6%8E%A8%E8%8D%90%EF%BC%89)
+- 在插件配置页面下填入搭建的服务端地址与Token，如：
+  - `http://192.168.1.2:5000`
 
 ## 文件命名
 
@@ -96,15 +56,20 @@ docker-compose up -d
 
 1. 字母可以忽略大小写
 2. `_`和`-`可以互换
-3. 确保番号在[Providers](#Providers)里可以搜到
+3. 确保番号在[数据来源](#数据来源)里可以搜到
+4. 中文字幕在文件名后加入`-C`后缀
+5. 多集影片在文件名后加入如`-cd1`后缀
+6. 其他奇怪命名均有可能导致无法自动识别
 
-### 例如
+### 例子
 
-- `ABP-233.mp4`
-- `ABP-233-C.mp4`
-- `ABP-233-C-cd1.mp4`
+- `ABP-725.mp4`
+- `422ION-0062-C.mp4`
+- `012414_743-cd1.wmv`
+- `012414_743-cd2.wmv`
+- `259LUXU-1377-C-cd1.mkv`
 
-## Providers
+## 数据来源
 
 - [AVSOX](https://tellme.pw/avsox)
 - [Jav321](https://www.jav321.com/)
