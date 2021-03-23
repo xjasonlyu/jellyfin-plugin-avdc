@@ -6,7 +6,7 @@ namespace Jellyfin.Plugin.AVDC.Configuration
     {
         public PluginConfiguration()
         {
-            Server = "http://avdc.internal:5000";
+            Server = "http://avdc-api:5000";
             Token = string.Empty;
         }
 
