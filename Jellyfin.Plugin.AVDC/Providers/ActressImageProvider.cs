@@ -7,16 +7,14 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
-using MediaBrowser.Model.Serialization;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class ActressImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
     {
-        public ActressImageProvider(IHttpClientFactory httpClientFactory,
-            IJsonSerializer jsonSerializer,
-            ILogger<ActressImageProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
+        public ActressImageProvider(IHttpClientFactory httpClientFactory, ILogger<ActressImageProvider> logger) : base(
+            httpClientFactory, logger)
         {
             // Empty
         }

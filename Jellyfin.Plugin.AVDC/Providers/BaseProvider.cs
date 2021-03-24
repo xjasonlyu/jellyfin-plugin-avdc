@@ -2,10 +2,11 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
-using MediaBrowser.Model.Serialization;
+using MediaBrowser.Common.Json;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
@@ -13,14 +14,15 @@ namespace Jellyfin.Plugin.AVDC.Providers
     public abstract class BaseProvider
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IJsonSerializer _jsonSerializer;
+        private readonly JsonSerializerOptions _jsonOptions;
+
         protected readonly ILogger Logger;
 
-        protected BaseProvider(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer, ILogger logger)
+        protected BaseProvider(IHttpClientFactory httpClientFactory, ILogger logger)
         {
-            _httpClientFactory = httpClientFactory;
-            _jsonSerializer = jsonSerializer;
             Logger = logger;
+            _httpClientFactory = httpClientFactory;
+            _jsonOptions = new JsonSerializerOptions(JsonDefaults.GetOptions());
         }
 
         protected PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
@@ -45,7 +47,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
             try
             {
                 var contentStream = await GetStream(url, cancellationToken);
-                return await _jsonSerializer.DeserializeFromStreamAsync<Metadata>(contentStream);
+                return await JsonSerializer.DeserializeAsync<Metadata>(contentStream, _jsonOptions, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -61,7 +64,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
             try
             {
                 var contentStream = await GetStream(url, cancellationToken);
-                return await _jsonSerializer.DeserializeFromStreamAsync<Actress>(contentStream);
+                return await JsonSerializer.DeserializeAsync<Actress>(contentStream, _jsonOptions, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {
