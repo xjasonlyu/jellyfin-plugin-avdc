@@ -13,7 +13,7 @@ def generate(filename, version):
     return {
         "checksum": md5sum(filename),
         "changelog": "Auto Released by Actions",
-        "targetAbi": "10.7.0.0",
+        "targetAbi": "10.7.1.0",
         "sourceUrl": "https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases/download/"
                      f"v{version}/Jellyfin.Plugin.AVDC.zip",
         "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
