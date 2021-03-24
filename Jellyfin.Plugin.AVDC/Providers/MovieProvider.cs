@@ -36,8 +36,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
-            if (Utility.HasChineseSubtitle(info) && !m.Genres.Contains("中文字幕"))
-                m.Genres.Add("中文字幕");
+            var genres = m.Genres.ToList();
+            if (Utility.HasChineseSubtitle(info) && !genres.Contains("中文字幕"))
+                genres.Add("中文字幕");
 
             // Create Studios
             var studios = new List<string>();
@@ -54,7 +55,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     OriginalTitle = m.Title,
                     Overview = m.Overview,
                     Tagline = tagline,
-                    Genres = m.Genres.ToArray(),
+                    Genres = genres.ToArray(),
                     Studios = studios.ToArray(),
                     PremiereDate = m.Release,
                     ProductionYear = m.Release.Year,
