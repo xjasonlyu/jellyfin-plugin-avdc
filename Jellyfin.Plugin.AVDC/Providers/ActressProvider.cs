@@ -7,16 +7,14 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
-using MediaBrowser.Model.Serialization;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class ActressProvider : BaseProvider, IRemoteMetadataProvider<Person, PersonLookupInfo>, IHasOrder
     {
-        public ActressProvider(IHttpClientFactory httpClientFactory,
-            IJsonSerializer jsonSerializer,
-            ILogger<ActressProvider> logger) : base(httpClientFactory, jsonSerializer, logger)
+        public ActressProvider(IHttpClientFactory httpClientFactory, ILogger<ActressProvider> logger) : base(
+            httpClientFactory, logger)
         {
             // Empty
         }
@@ -37,11 +35,19 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
                 return new MetadataResult<Person>();
 
+            var locations = new List<string>();
+            if (!string.IsNullOrWhiteSpace(actress.Nationality))
+                locations.Add(actress.Nationality);
+
             return new MetadataResult<Person>
             {
                 Item = new Person
                 {
                     Name = actress.Name,
+                    PremiereDate = actress.Birthday,
+                    ProductionYear = actress.Birthday?.Year,
+                    ProductionLocations = locations.ToArray(),
+                    Overview = Utility.FormatOverview(actress),
                     ProviderIds = new Dictionary<string, string> {{Name, actress.Name}}
                 },
                 HasMetadata = true
