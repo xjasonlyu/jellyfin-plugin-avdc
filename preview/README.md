@@ -10,13 +10,17 @@
 
 ![](video.jpg)
 
+### 女优信息
+
+![](actress.jpg)
+
 ### 影片搜索
 
 ![](search.jpg)
 
 ### 女优搜索
 
-![](actress.jpg)
+![](search_actress.jpg)
 
 ### 插件配置
 
