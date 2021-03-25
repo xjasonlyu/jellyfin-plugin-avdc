@@ -30,7 +30,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
-            var actress = await GetActress(name, cancellationToken);
+            var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new MetadataResult<Person>();
 
             var locations = new List<string>();
@@ -60,7 +60,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
-            var actress = await GetActress(name, cancellationToken);
+            var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
@@ -69,7 +69,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     Name = actress.Name,
                     ProviderIds = new Dictionary<string, string> {{Name, actress.Name}},
-                    ImageUrl = $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
+                    ImageUrl = ApiClient.GetActressImageUrl(actress.Name)
                 }
             };
         }

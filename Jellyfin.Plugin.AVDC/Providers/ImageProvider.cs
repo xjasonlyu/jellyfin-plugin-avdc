@@ -29,7 +29,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var vid = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(item.FileNameWithoutExtension);
 
-            var m = await GetMetadata(vid, cancellationToken);
+            var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
@@ -38,13 +38,13 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
-                    Url = $"{Config.Server}{ApiPath.PrimaryImage}{m.Vid}"
+                    Url = ApiClient.GetPrimaryImageUrl(m.Vid)
                 },
                 new()
                 {
                     ProviderName = Name,
                     Type = ImageType.Backdrop,
-                    Url = $"{Config.Server}{ApiPath.BackdropImage}{m.Vid}"
+                    Url = ApiClient.GetBackdropImageUrl(m.Vid)
                 }
             };
         }

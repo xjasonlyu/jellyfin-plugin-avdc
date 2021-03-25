@@ -29,7 +29,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var name = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = item.Name;
 
-            var actress = await GetActress(name, cancellationToken);
+            var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
@@ -38,7 +38,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
-                    Url = $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
+                    Url = ApiClient.GetActressImageUrl(actress.Name)
                 }
             };
         }
