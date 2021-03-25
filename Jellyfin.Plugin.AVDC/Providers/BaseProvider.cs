@@ -16,8 +16,6 @@ namespace Jellyfin.Plugin.AVDC.Providers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _jsonOptions;
 
-        protected readonly ILogger Logger;
-
         protected BaseProvider(IHttpClientFactory httpClientFactory, ILogger logger)
         {
             Logger = logger;
@@ -25,7 +23,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
             _jsonOptions = new JsonSerializerOptions(JsonDefaults.GetOptions());
         }
 
-        protected PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
+        protected ILogger Logger { get; }
+
+        protected static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
         public Task<HttpResponseMessage> GetImageResponse(string url, CancellationToken cancellationToken)
         {
