@@ -30,7 +30,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(item.FileNameWithoutExtension);
 
             var m = await GetMetadata(vid, cancellationToken);
-            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteImageInfo>();
+            if (!m.Valid()) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
             {

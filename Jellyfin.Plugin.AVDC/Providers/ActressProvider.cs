@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,8 +31,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
             var actress = await GetActress(name, cancellationToken);
-            if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
-                return new MetadataResult<Person>();
+            if (!actress.Valid()) return new MetadataResult<Person>();
 
             var locations = new List<string>();
             if (!string.IsNullOrWhiteSpace(actress.Nationality))
@@ -63,8 +61,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
             var actress = await GetActress(name, cancellationToken);
-            if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
-                return new List<RemoteSearchResult>();
+            if (!actress.Valid()) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {

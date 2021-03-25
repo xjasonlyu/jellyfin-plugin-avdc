@@ -33,7 +33,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
 
             var m = await GetMetadata(vid, cancellationToken);
-            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new MetadataResult<Movie>();
+            if (!m.Valid()) return new MetadataResult<Movie>();
 
             // Add `中文字幕` Genre
             var genres = m.Genres.ToList();
@@ -78,9 +78,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 var actress = await GetActress(name, cancellationToken);
 
-                var url = actress != null && !string.IsNullOrWhiteSpace(actress.Name) && actress.Images.Any()
-                    ? $"{Config.Server}{ApiPath.ActressImage}{actress.Name}"
-                    : string.Empty;
+                var url = !actress.Valid()
+                    ? string.Empty
+                    : $"{Config.Server}{ApiPath.ActressImage}{actress.Name}";
 
                 result.AddPerson(new PersonInfo
                 {
@@ -102,7 +102,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
 
             var m = await GetMetadata(vid, cancellationToken);
-            if (m == null || string.IsNullOrWhiteSpace(m.Vid)) return new List<RemoteSearchResult>();
+            if (!m.Valid()) return new List<RemoteSearchResult>();
 
             return new List<RemoteSearchResult>
             {

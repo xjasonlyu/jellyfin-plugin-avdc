@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Jellyfin.Plugin.AVDC
@@ -38,6 +39,11 @@ namespace Jellyfin.Plugin.AVDC
         [JsonPropertyName("measurements")] public string Measurements { get; set; }
         [JsonPropertyName("birthday")] public DateTime? Birthday { get; set; }
         [JsonPropertyName("av_activity")] public DateTime? AvActivity { get; set; }
+
+        public bool Valid()
+        {
+            return !string.IsNullOrWhiteSpace(Name) && Images.Any();
+        }
     }
 
     public class Metadata
@@ -66,5 +72,10 @@ namespace Jellyfin.Plugin.AVDC
         [JsonPropertyName("release")] public DateTime Release { get; set; }
         [JsonPropertyName("genres")] public string[] Genres { get; set; }
         [JsonPropertyName("actresses")] public string[] Actresses { get; set; }
+
+        public bool Valid()
+        {
+            return !string.IsNullOrWhiteSpace(Vid);
+        }
     }
 }

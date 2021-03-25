@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,8 +30,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (string.IsNullOrWhiteSpace(name)) name = item.Name;
 
             var actress = await GetActress(name, cancellationToken);
-            if (actress == null || string.IsNullOrWhiteSpace(actress.Name) || !actress.Images.Any())
-                return new List<RemoteImageInfo>();
+            if (!actress.Valid()) return new List<RemoteImageInfo>();
 
             return new List<RemoteImageInfo>
             {
