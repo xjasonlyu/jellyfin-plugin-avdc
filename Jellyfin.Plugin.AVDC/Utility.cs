@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using MediaBrowser.Controller.Providers;
 
 namespace Jellyfin.Plugin.AVDC
@@ -35,8 +37,11 @@ namespace Jellyfin.Plugin.AVDC
         {
             var filename = Path.GetFileNameWithoutExtension(info.Path);
 
-            // Simply check if filename contains `-C`
-            return filename?.ToUpper().Replace("CD", "").Contains("-C") ?? false;
+            var r = new Regex(@"-cd\d+$",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            filename = r.Replace(filename ?? string.Empty, string.Empty);
+
+            return filename.ToUpper().Substring(Math.Max(0, filename.Length - 2)).Equals("-C");
         }
     }
 }

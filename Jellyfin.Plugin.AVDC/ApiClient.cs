@@ -33,12 +33,12 @@ namespace Jellyfin.Plugin.AVDC
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
-        public static string GetActressUrl(string name)
+        private static string GetActressUrl(string name)
         {
             return $"{Config.Server}{Actress}{name}";
         }
 
-        public static string GetMetadataUrl(string vid)
+        private static string GetMetadataUrl(string vid)
         {
             return $"{Config.Server}{Metadata}{vid}";
         }
