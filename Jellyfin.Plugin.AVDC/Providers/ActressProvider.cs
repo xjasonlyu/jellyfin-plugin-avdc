@@ -51,7 +51,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (!string.IsNullOrWhiteSpace(actress.Nationality))
                 locations.Add(actress.Nationality);
 
-            return new MetadataResult<Person>
+            var result = new MetadataResult<Person>
             {
                 Item = new Person
                 {
@@ -59,11 +59,13 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     PremiereDate = actress.Birthday,
                     ProductionYear = actress.Birthday?.Year,
                     ProductionLocations = locations.ToArray(),
-                    Overview = Utility.FormatOverview(actress),
-                    ProviderIds = new Dictionary<string, string> {{Name, actress.Name}}
+                    Overview = Utility.FormatOverview(actress)
                 },
                 HasMetadata = true
             };
+            result.Item.SetProviderId(Name, actress.Name);
+
+            return result;
         }
 
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
@@ -80,16 +82,15 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new List<RemoteSearchResult>();
 
-            return new List<RemoteSearchResult>
+            var result = new RemoteSearchResult
             {
-                new RemoteSearchResult
-                {
-                    Name = actress.Name,
-                    SearchProviderName = Name,
-                    ProviderIds = new Dictionary<string, string> {{Name, actress.Name}},
-                    ImageUrl = ApiClient.GetActressImageUrl(actress.Name)
-                }
+                Name = actress.Name,
+                SearchProviderName = Name,
+                ImageUrl = ApiClient.GetActressImageUrl(actress.Name)
             };
+            result.SetProviderId(Name, actress.Name);
+
+            return new List<RemoteSearchResult> {result};
         }
     }
 }

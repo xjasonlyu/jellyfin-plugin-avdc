@@ -73,11 +73,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Studios = studios.ToArray(),
                     PremiereDate = m.Release,
                     ProductionYear = m.Release.Year,
-                    ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
                     OfficialRating = "XXX"
                 },
                 HasMetadata = true
             };
+            result.Item.SetProviderId(Name, m.Vid);
 
             // Add Director
             if (!string.IsNullOrWhiteSpace(m.Director))
@@ -119,17 +119,16 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteSearchResult>();
 
-            return new List<RemoteSearchResult>
+            var result = new RemoteSearchResult
             {
-                new RemoteSearchResult
-                {
-                    Name = Utility.FormatName(m),
-                    SearchProviderName = Name,
-                    ProductionYear = m.Release.Year,
-                    ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
-                    ImageUrl = ApiClient.GetPrimaryImageUrl(m.Vid)
-                }
+                Name = Utility.FormatName(m),
+                SearchProviderName = Name,
+                ProductionYear = m.Release.Year,
+                ImageUrl = ApiClient.GetPrimaryImageUrl(m.Vid)
             };
+            result.SetProviderId(Name, m.Vid);
+
+            return new List<RemoteSearchResult> {result};
         }
     }
 }
