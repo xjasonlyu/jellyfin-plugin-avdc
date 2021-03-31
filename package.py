@@ -15,7 +15,7 @@ def generate(filename, version):
         "changelog": "Auto Released by Actions",
         "targetAbi": "10.7.1.0",
         "sourceUrl": "https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases/download/"
-                     f"v{version}/Jellyfin.Plugin.AVDC.zip",
+                     f"v{version}/Jellyfin.AVDC@v{version}.zip",
         "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
         "version": version
     }
