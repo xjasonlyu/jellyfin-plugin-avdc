@@ -6,10 +6,10 @@ using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 #if __EMBY__
+using Jellyfin.Plugin.AVDC.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.Configuration;
-using Jellyfin.Plugin.AVDC.Extensions;
 
 #else
 using System.Net.Http;

@@ -38,17 +38,14 @@ namespace Jellyfin.Plugin.AVDC
         public ApiClient(IHttpClient httpClient, ILogger logger)
         {
             _httpClient = httpClient;
-            _logger = logger;
-            _jsonOptions = new JsonSerializerOptions();
-        }
 #else
         public ApiClient(IHttpClientFactory httpClientFactory, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
-            _logger = logger;
-            _jsonOptions = new JsonSerializerOptions(JsonDefaults.GetOptions());
-        }
 #endif
+            _logger = logger;
+            _jsonOptions = new JsonSerializerOptions();
+        }
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
@@ -163,12 +160,6 @@ namespace Jellyfin.Plugin.AVDC
 
             return response;
         }
-
-        private async Task<Stream> GetStream(string url, CancellationToken cancellationToken)
-        {
-            var response = await GetAsync(url, cancellationToken);
-            return response.Content;
-        }
 #else
         /// <summary>
         ///     Get the response by HTTP without any other options.
@@ -193,12 +184,16 @@ namespace Jellyfin.Plugin.AVDC
             response.EnsureSuccessStatusCode();
             return response;
         }
+#endif
 
         private async Task<Stream> GetStream(string url, CancellationToken cancellationToken)
         {
             var response = await GetAsync(url, cancellationToken);
+#if __EMBY__
+            return response.Content;
+#else
             return await response.Content.ReadAsStreamAsync(cancellationToken);
-        }
 #endif
+        }
     }
 }
