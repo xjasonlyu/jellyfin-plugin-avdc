@@ -1,19 +1,28 @@
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
-using Microsoft.Extensions.Logging;
+#if __EMBY__
+using MediaBrowser.Common.Net;
+using MediaBrowser.Model.Logging;
 
+#else
+using System.Net.Http;
+using Microsoft.Extensions.Logging;
+#endif
 namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class ActressProvider : BaseProvider, IRemoteMetadataProvider<Person, PersonLookupInfo>, IHasOrder
     {
+#if __EMBY__
+        public ActressProvider(IHttpClient httpClient, ILogger logger) : base(httpClient, logger)
+#else
         public ActressProvider(IHttpClientFactory httpClientFactory, ILogger<ActressProvider> logger) : base(
             httpClientFactory, logger)
+#endif
         {
             // Empty
         }
@@ -25,8 +34,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<MetadataResult<Person>> GetMetadata(PersonLookupInfo info,
             CancellationToken cancellationToken)
         {
+#if __EMBY__
+            Logger.Info("[AVDC] GetMetadata for actress: {0}", info.Name);
+#else
             Logger.LogInformation("[AVDC] GetMetadata for actress: {Name}", info.Name);
-
+#endif
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
@@ -55,8 +67,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             PersonLookupInfo info, CancellationToken cancellationToken)
         {
+#if __EMBY__
+            Logger.Info("[AVDC] SearchResults for actress: {0}", info.Name);
+#else
             Logger.LogInformation("[AVDC] SearchResults for actress: {Name}", info.Name);
-
+#endif
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
 
@@ -65,7 +80,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
             return new List<RemoteSearchResult>
             {
-                new()
+                new RemoteSearchResult
                 {
                     Name = actress.Name,
                     ProviderIds = new Dictionary<string, string> {{Name, actress.Name}},

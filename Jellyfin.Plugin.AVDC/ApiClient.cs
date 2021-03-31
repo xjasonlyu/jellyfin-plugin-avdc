@@ -1,13 +1,20 @@
 using System;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
+#if __EMBY__
+using System.Net;
+using MediaBrowser.Common.Net;
+using MediaBrowser.Model.Logging;
+
+#else
+using System.Net.Http;
+using System.Net.Http.Headers;
 using MediaBrowser.Common.Json;
 using Microsoft.Extensions.Logging;
+#endif
 
 namespace Jellyfin.Plugin.AVDC
 {
@@ -19,17 +26,29 @@ namespace Jellyfin.Plugin.AVDC
         private const string PrimaryImage = "/image/primary/";
         private const string BackdropImage = "/image/backdrop/";
 
+#if __EMBY__
+        private readonly IHttpClient _httpClient;
+#else
         private readonly IHttpClientFactory _httpClientFactory;
+#endif
         private readonly JsonSerializerOptions _jsonOptions;
         private readonly ILogger _logger;
 
-
+#if __EMBY__
+        public ApiClient(IHttpClient httpClient, ILogger logger)
+        {
+            _httpClient = httpClient;
+            _logger = logger;
+            _jsonOptions = new JsonSerializerOptions();
+        }
+#else
         public ApiClient(IHttpClientFactory httpClientFactory, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
             _jsonOptions = new JsonSerializerOptions(JsonDefaults.GetOptions());
         }
+#endif
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
@@ -68,7 +87,11 @@ namespace Jellyfin.Plugin.AVDC
         {
             if (string.IsNullOrWhiteSpace(vid))
             {
+#if __EMBY__
+                _logger.Error("[AVDC] invalid vid: \"{0}\"", vid);
+#else
                 _logger.LogError("[AVDC] invalid vid: \"{Vid}\"", vid);
+#endif
                 return new Metadata();
             }
 
@@ -80,7 +103,11 @@ namespace Jellyfin.Plugin.AVDC
             }
             catch (Exception e)
             {
+#if __EMBY__
+                _logger.Error("[AVDC] GetMetadata for {0} failed: {1}", vid, e.Message);
+#else
                 _logger.LogError("[AVDC] GetMetadata for {Vid} failed: {Message}", vid, e.Message);
+#endif
                 return new Metadata();
             }
         }
@@ -101,17 +128,54 @@ namespace Jellyfin.Plugin.AVDC
             }
             catch (Exception e)
             {
+#if __EMBY__
+                _logger.Error("[AVDC] GetActress for {0} failed: {1}", name, e.Message);
+#else
                 _logger.LogError("[AVDC] GetActress for {Name} failed: {Message}", name, e.Message);
+#endif
                 return new Actress();
             }
         }
 
+
+#if __EMBY__
         /// <summary>
         ///     Get the response by HTTP without any other options.
         /// </summary>
         /// <param name="url">Request URL.</param>
         /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <returns>Http Response.</returns>
+        /// <returns>HttpResponseInfo.</returns>
+        public async Task<HttpResponseInfo> GetAsync(string url, CancellationToken cancellationToken)
+        {
+            var options = new HttpRequestOptions
+            {
+                Url = url,
+                CancellationToken = cancellationToken
+            };
+
+            // Add Auth Token Header
+            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
+                options.RequestHeaders.Add("Authorization", $"Bearer {Config.Token}");
+
+            var response = await _httpClient.GetResponse(options);
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception($"Bad status code: {response.StatusCode}");
+
+            return response;
+        }
+
+        private async Task<Stream> GetStream(string url, CancellationToken cancellationToken)
+        {
+            var response = await GetAsync(url, cancellationToken);
+            return response.Content;
+        }
+#else
+        /// <summary>
+        ///     Get the response by HTTP without any other options.
+        /// </summary>
+        /// <param name="url">Request URL.</param>
+        /// <param name="cancellationToken">Used to cancel the request.</param>
+        /// <returns>HttpResponseMessage.</returns>
         public async Task<HttpResponseMessage> GetAsync(string url, CancellationToken cancellationToken)
         {
             _logger.LogDebug("[AVDC] HTTP request to: {Url}", url);
@@ -135,5 +199,6 @@ namespace Jellyfin.Plugin.AVDC
             var response = await GetAsync(url, cancellationToken);
             return await response.Content.ReadAsStreamAsync(cancellationToken);
         }
+#endif
     }
 }

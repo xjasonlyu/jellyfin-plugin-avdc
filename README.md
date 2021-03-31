@@ -1,4 +1,4 @@
-# AVDC Plugin for Jellyfin
+# AVDC Plugin for Jellyfin/Emby
 
 ~~硬盘里的小姐姐总得有个身份~~
 
@@ -38,7 +38,7 @@
 
 ## 安装
 
-Jellyfin >= 10.7.0
+Jellyfin >= 10.7.0 || Emby >= 4.5.4
 
 ### 插件
 
@@ -48,6 +48,11 @@ Jellyfin >= 10.7.0
   - 在Catalog下找到AVDC，安装最新版
   - 重启Jellyfin（⚠️）
   - 在媒体库设置中勾选AVDC（☑️）
+
+- Emby插件目录
+  - 从[Releases](https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases)下载插件
+  - 解压出dll文件，上传到插件目录
+  - 重启Emby（⚠️）
 
 ### 配置
 

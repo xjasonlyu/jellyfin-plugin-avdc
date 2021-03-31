@@ -1,19 +1,29 @@
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
-using Microsoft.Extensions.Logging;
+#if __EMBY__
+using MediaBrowser.Common.Net;
+using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.Configuration;
 
+#else
+using System.Net.Http;
+using Microsoft.Extensions.Logging;
+#endif
 namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class ActressImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
     {
+#if __EMBY__
+        public ActressImageProvider(IHttpClient httpClient, ILogger logger) : base(httpClient, logger)
+#else
         public ActressImageProvider(IHttpClientFactory httpClientFactory, ILogger<ActressImageProvider> logger) : base(
             httpClientFactory, logger)
+#endif
         {
             // Empty
         }
@@ -22,10 +32,16 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public string Name => Plugin.Instance.Name;
 
+#if __EMBY__
+        public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, LibraryOptions libraryOptions,
+            CancellationToken cancellationToken)
+        {
+            Logger.Info("[AVDC] GetImages for actress: {0}", item.Name);
+#else
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
         {
             Logger.LogInformation("[AVDC] GetImages for actress: {Name}", item.Name);
-
+#endif
             var name = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = item.Name;
 
@@ -34,7 +50,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
             return new List<RemoteImageInfo>
             {
-                new()
+                new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,

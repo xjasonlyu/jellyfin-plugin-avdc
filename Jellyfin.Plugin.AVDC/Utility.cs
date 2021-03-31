@@ -14,12 +14,12 @@ namespace Jellyfin.Plugin.AVDC
 
         public static string FormatName(Metadata m)
         {
-            return m.Vid.Contains('.') ? m.Vid : $"{m.Vid} {m.Title}";
+            return m.Vid.Contains(".") ? m.Vid : $"{m.Vid} {m.Title}";
         }
 
         public static string FormatOverview(Actress a)
         {
-            static string G(string k, string v)
+            string G(string k, string v)
             {
                 return !string.IsNullOrWhiteSpace(v) ? $"{k}: {v}\n" : string.Empty;
             }
@@ -35,8 +35,11 @@ namespace Jellyfin.Plugin.AVDC
 
         public static bool HasChineseSubtitle(MovieInfo info)
         {
+#if __EMBY__
+            var filename = Path.GetFileNameWithoutExtension(info.Name);
+#else
             var filename = Path.GetFileNameWithoutExtension(info.Path);
-
+#endif
             var r = new Regex(@"-cd\d+$",
                 RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
             filename = r.Replace(filename ?? string.Empty, string.Empty);
