@@ -122,6 +122,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 new RemoteSearchResult
                 {
                     Name = Utility.FormatName(m),
+                    SearchProviderName = Name,
                     ProductionYear = m.Release.Year,
                     ProviderIds = new Dictionary<string, string> {{Name, m.Vid}},
                     ImageUrl = ApiClient.GetPrimaryImageUrl(m.Vid)

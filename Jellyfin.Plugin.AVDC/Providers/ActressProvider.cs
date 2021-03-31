@@ -83,6 +83,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 new RemoteSearchResult
                 {
                     Name = actress.Name,
+                    SearchProviderName = Name,
                     ProviderIds = new Dictionary<string, string> {{Name, actress.Name}},
                     ImageUrl = ApiClient.GetActressImageUrl(actress.Name)
                 }
