@@ -30,11 +30,12 @@ jobs:
       - name: Extract Version
         id: shell
         run: |
-          echo "::set-output name=version::$(python3 -c "print([i.split('@')[1][1:-4] for i in __import__('os').listdir('bin') if i.endswith('.zip')][0])")"
+          cd Jellyfin.Plugin.AVDC/bin/
+          echo "::set-output name=version::$(python3 -c "print([i.split('@')[1][1:-4] for i in __import__('os').listdir('.') if i.endswith('.zip')][0])")"
 
       - name: Generate Manifest
         run: |
-          python3 package.py bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip ${{ steps.shell.outputs.version }}
+          python3 package.py Jellyfin.Plugin.AVDC/bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip ${{ steps.shell.outputs.version }}
 
       - name: Commit Change
         run: |
@@ -58,5 +59,5 @@ jobs:
           draft: false
           tag_name: v${{ steps.shell.outputs.version }}
           files: |
-            bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip
-            bin/Emby.AVDC@v${{ steps.shell.outputs.version }}.zip
+            Jellyfin.Plugin.AVDC/bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip
+            Jellyfin.Plugin.AVDC/bin/Emby.AVDC@v${{ steps.shell.outputs.version }}.zip
