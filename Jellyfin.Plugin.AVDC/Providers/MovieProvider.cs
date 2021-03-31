@@ -8,6 +8,7 @@ using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 #if __EMBY__
+using Jellyfin.Plugin.AVDC.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 
@@ -20,7 +21,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
     public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
     {
 #if __EMBY__
-        public MovieProvider(IHttpClient httpClient, ILogger logger) : base(httpClient, logger)
+        public MovieProvider(IHttpClient httpClient, ILogManager logManager) : base(httpClient,
+            logManager.CreateLogger<MovieProvider>())
 #else
         public MovieProvider(IHttpClientFactory httpClientFactory, ILogger<MovieProvider> logger) : base(
             httpClientFactory, logger)

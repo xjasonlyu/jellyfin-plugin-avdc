@@ -22,49 +22,47 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
-        <PackageReference Include="Jellyfin.Controller" Version="10.7.1"/>
-        <PackageReference Include="Jellyfin.Model" Version="10.7.1"/>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0"/>
+        <PackageReference Include="Jellyfin.Controller" Version="10.7.1" />
+        <PackageReference Include="Jellyfin.Model" Version="10.7.1" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
-        <PackageReference Include="MediaBrowser.Server.Core" Version="4.5.0.28"/>
-        <PackageReference Include="System.Text.Json" Version="5.0.1"/>
+        <PackageReference Include="MediaBrowser.Server.Core" Version="4.5.0.28" />
+        <PackageReference Include="System.Text.Json" Version="5.0.1" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Release.Emby'">
-        <PackageReference Include="ILRepack" Version="2.0.18"/>
+        <PackageReference Include="ILRepack" Version="2.0.18" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
-        <None Remove="Configuration\configPage.html"/>
-        <EmbeddedResource Include="Configuration\configPage.html"/>
+        <None Remove="Configuration\configPage.html" />
+        <EmbeddedResource Include="Configuration\configPage.html" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
-        <None Remove="Configuration\configPage.html"/>
-        <None Remove="thumb.png"/>
-        <EmbeddedResource Include="Configuration\configPage.html"/>
-        <EmbeddedResource Include="thumb.png"/>
+        <None Remove="Configuration\configPage.html" />
+        <None Remove="thumb.png" />
+        <EmbeddedResource Include="Configuration\configPage.html" />
+        <EmbeddedResource Include="thumb.png" />
     </ItemGroup>
 
     <Target Name="ILRepack" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release.Emby'">
-        <Exec Command="$(ILRepack) /out:$(AssemblyName).dll $(AssemblyName).dll System.Text.Json.dll System.Text.Encodings.Web.dll" WorkingDirectory="$(OutputPath)"/>
+        <Exec Command="$(ILRepack) /out:$(AssemblyName).dll $(AssemblyName).dll System.Text.Json.dll System.Text.Encodings.Web.dll" WorkingDirectory="$(OutputPath)" />
     </Target>
 
     <Target Name="Zip" AfterTargets="ILRepack" Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='Release.Emby'">
         <ItemGroup>
-            <FilesToDelete Include="$(BaseOutputPath)Jellyfin.AVDC*.zip" Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'"/>
-            <FilesToDelete Include="$(BaseOutputPath)Emby.AVDC*.zip" Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'"/>
-            <TempZipDirectory Include="$(OutputPath)output"/>
+            <FilesToDelete Include="$(BaseOutputPath)Jellyfin.AVDC*.zip" Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'" />
+            <FilesToDelete Include="$(BaseOutputPath)Emby.AVDC*.zip" Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'" />
+            <TempZipDirectory Include="$(OutputPath)output" />
         </ItemGroup>
-        <Delete Files="@(FilesToDelete)"/>
-        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="@(TempZipDirectory)"/>
-        <ZipDirectory SourceDirectory="@(TempZipDirectory)" DestinationFile="$(BaseOutputPath)Jellyfin.AVDC@v$(Version).zip"
-                      Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'"/>
-        <ZipDirectory SourceDirectory="@(TempZipDirectory)" DestinationFile="$(BaseOutputPath)Emby.AVDC@v$(Version).zip"
-                      Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'"/>
-        <RemoveDir Directories="@(TempZipDirectory)"/>
+        <Delete Files="@(FilesToDelete)" />
+        <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="@(TempZipDirectory)" />
+        <ZipDirectory SourceDirectory="@(TempZipDirectory)" DestinationFile="$(BaseOutputPath)Jellyfin.AVDC@v$(Version).zip" Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'" />
+        <ZipDirectory SourceDirectory="@(TempZipDirectory)" DestinationFile="$(BaseOutputPath)Emby.AVDC@v$(Version).zip" Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'" />
+        <RemoveDir Directories="@(TempZipDirectory)" />
     </Target>
 
 </Project>

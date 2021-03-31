@@ -9,6 +9,7 @@ using MediaBrowser.Model.Providers;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.Configuration;
+using Jellyfin.Plugin.AVDC.Extensions;
 
 #else
 using System.Net.Http;
@@ -19,7 +20,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
     public class ActressImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
     {
 #if __EMBY__
-        public ActressImageProvider(IHttpClient httpClient, ILogger logger) : base(httpClient, logger)
+        public ActressImageProvider(IHttpClient httpClient, ILogManager logManager) : base(httpClient,
+            logManager.CreateLogger<ActressImageProvider>())
 #else
         public ActressImageProvider(IHttpClientFactory httpClientFactory, ILogger<ActressImageProvider> logger) : base(
             httpClientFactory, logger)

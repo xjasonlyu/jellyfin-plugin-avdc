@@ -8,6 +8,7 @@ using MediaBrowser.Model.Providers;
 #if __EMBY__
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
+using Jellyfin.Plugin.AVDC.Extensions;
 
 #else
 using System.Net.Http;
@@ -18,7 +19,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
     public class ActressProvider : BaseProvider, IRemoteMetadataProvider<Person, PersonLookupInfo>, IHasOrder
     {
 #if __EMBY__
-        public ActressProvider(IHttpClient httpClient, ILogger logger) : base(httpClient, logger)
+        public ActressProvider(IHttpClient httpClient, ILogManager logManager) : base(httpClient,
+            logManager.CreateLogger<ActressProvider>())
 #else
         public ActressProvider(IHttpClientFactory httpClientFactory, ILogger<ActressProvider> logger) : base(
             httpClientFactory, logger)
