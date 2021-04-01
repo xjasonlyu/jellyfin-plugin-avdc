@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
@@ -11,7 +12,6 @@ using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 
 #else
-using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 #endif
@@ -159,7 +159,7 @@ namespace Jellyfin.Plugin.AVDC
 
             var response = await _httpClient.GetResponse(options);
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new Exception($"Bad status code: {response.StatusCode}");
+                throw new HttpRequestException($"Bad Status Code: {response.StatusCode}");
 
             return response;
         }
