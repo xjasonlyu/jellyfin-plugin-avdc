@@ -1,3 +1,4 @@
+using Jellyfin.Plugin.AVDC.Providers;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
@@ -9,16 +10,16 @@ using MediaBrowser.Model.Providers;
 
 namespace Jellyfin.Plugin.AVDC.ExternalIds
 {
-    public class ExternalId : IExternalId
+    public class MgstageExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Plugin.Instance.Name;
+        public string Name => ProviderNames.Mgstage;
 #else
-        public string ProviderName => Plugin.Instance.Name;
+        public string ProviderName => ExternalIdNames.Mgstage;
 #endif
-        public string Key => Plugin.Instance.Name;
+        public string Key => ProviderNames.Mgstage;
 
-        public string UrlFormatString => null;
+        public string UrlFormatString => "{0}";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;

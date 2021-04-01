@@ -38,7 +38,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public int Order => 1;
 
-        public string Name => Plugin.Instance.Name;
+        public string Name => ProviderNames.Avdc;
 
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)
@@ -83,6 +83,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 HasMetadata = true
             };
             result.Item.SetProviderId(Name, m.Vid);
+
+            // Set All External Links
+            SetProviderIds(result.Item, m.Website);
 
             // Add Director
             if (!string.IsNullOrWhiteSpace(m.Director))
@@ -134,6 +137,21 @@ namespace Jellyfin.Plugin.AVDC.Providers
             result.SetProviderId(Name, m.Vid);
 
             return new List<RemoteSearchResult> {result};
+        }
+
+        private static void SetProviderIds(IHasProviderIds item, IEnumerable<string> links)
+        {
+            foreach (var link in links)
+                if (link.Contains("avsox"))
+                    item.SetProviderId(ProviderNames.Avsox, link);
+                else if (link.Contains("jav321"))
+                    item.SetProviderId(ProviderNames.Jav321, link);
+                else if (link.Contains("javbus"))
+                    item.SetProviderId(ProviderNames.JavBus, link);
+                else if (link.Contains("javdb"))
+                    item.SetProviderId(ProviderNames.JavDb, link);
+                else if (link.Contains("mgstage"))
+                    item.SetProviderId(ProviderNames.Mgstage, link);
         }
     }
 }

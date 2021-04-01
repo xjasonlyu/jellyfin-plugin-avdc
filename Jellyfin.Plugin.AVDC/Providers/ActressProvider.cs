@@ -36,7 +36,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public int Order => 1;
 
-        public string Name => Plugin.Instance.Name;
+        public string Name => ProviderNames.Avdc;
 
         public async Task<MetadataResult<Person>> GetMetadata(PersonLookupInfo info,
             CancellationToken cancellationToken)

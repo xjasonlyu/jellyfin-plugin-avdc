@@ -1,5 +1,5 @@
 using Jellyfin.Plugin.AVDC.Providers;
-using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 
@@ -10,7 +10,7 @@ using MediaBrowser.Model.Providers;
 
 namespace Jellyfin.Plugin.AVDC.ExternalIds
 {
-    public class ActressExternalId : IExternalId
+    public class AvdcExternalId : IExternalId
     {
 #if __EMBY__
         public string Name => ProviderNames.Avdc;
@@ -22,12 +22,12 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
         public string UrlFormatString => null;
 
 #if !__EMBY__
-        public ExternalIdMediaType? Type => ExternalIdMediaType.Person;
+        public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;
 #endif
 
         public bool Supports(IHasProviderIds item)
         {
-            return item is Person;
+            return item is Movie;
         }
     }
 }
