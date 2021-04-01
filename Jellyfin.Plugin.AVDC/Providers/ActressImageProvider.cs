@@ -61,7 +61,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 double CalcRating(int index, int total)
                 {
-                    return 10.0 * (total - index) / total;
+                    return 5.0 * (total - index) / total + 5.0;
                 }
 
                 var imageInfo = await ApiClient.GetActressImageInfo(actress.Name, cancellationToken, i);
