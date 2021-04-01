@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -22,20 +22,19 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Build Plugins
-        run: |
-          dotnet build --configuration Release
-          dotnet build --configuration Release.Emby
-
-      - name: Extract Version
+      - name: Generate Version
         id: shell
         run: |
-          cd Jellyfin.Plugin.AVDC/bin/
-          echo "::set-output name=version::$(python3 -c "print([i.split('@')[1][1:-4] for i in __import__('os').listdir('.') if i.endswith('.zip')][0])")"
+          echo ::set-output name=version::$(date '+%Y.%m%d.%H%M')
+
+      - name: Build Plugins
+        run: |
+          dotnet build --configuration Release -p:Version=${{ steps.shell.outputs.version }}
+          dotnet build --configuration Release.Emby -p:Version=${{ steps.shell.outputs.version }}
 
       - name: Generate Manifest
         run: |
-          python3 package.py Jellyfin.Plugin.AVDC/bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip ${{ steps.shell.outputs.version }}
+          python3 package.py Jellyfin.Plugin.AVDC/bin/Jellyfin.AVDC@v${{ steps.shell.outputs.version }}.zip
 
       - name: Commit Change
         run: |

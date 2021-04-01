@@ -1,5 +1,5 @@
-import json
 import hashlib
+import json
 import sys
 from datetime import datetime
 
@@ -22,7 +22,10 @@ def generate(filename, version):
 
 
 def main():
-    filename, version = sys.argv[1:]
+    filename = sys.argv[1]
+    version = filename.split('@', maxsplit=1)[1] \
+        .removeprefix('v') \
+        .removesuffix('.zip')
 
     with open('manifest.json') as f:
         manifest = json.load(f)
