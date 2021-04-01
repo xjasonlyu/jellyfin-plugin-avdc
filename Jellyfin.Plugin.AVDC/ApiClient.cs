@@ -9,6 +9,7 @@ using MediaBrowser.Model.Serialization;
 using System.Net;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
+
 #else
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -61,6 +62,11 @@ namespace Jellyfin.Plugin.AVDC
         public static string GetActressImageUrl(string name)
         {
             return $"{Config.Server}{ActressImage}{name}";
+        }
+
+        public static string GetActressImageUrl(string name, int index)
+        {
+            return $"{Config.Server}{ActressImage}{name}/{index}";
         }
 
         public static string GetPrimaryImageUrl(string vid)
