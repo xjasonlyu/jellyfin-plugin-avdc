@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Jellyfin.Plugin.AVDC
+namespace Jellyfin.Plugin.AVDC.Models
 {
     public class Actress
     {

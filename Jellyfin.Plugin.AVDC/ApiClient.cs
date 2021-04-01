@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
+using Jellyfin.Plugin.AVDC.Models;
 #if __EMBY__
 using System.Net;
 using MediaBrowser.Common.Net;

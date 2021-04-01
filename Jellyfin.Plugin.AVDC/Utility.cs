@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Controller.Providers;
 
 namespace Jellyfin.Plugin.AVDC
