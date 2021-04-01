@@ -26,6 +26,8 @@ namespace Jellyfin.Plugin.AVDC
         private const string PrimaryImage = "/image/primary/";
         private const string ThumbImage = "/image/thumb/";
         private const string BackdropImage = "/image/backdrop/";
+        private const string ActressImageInfo = "/imageinfo/actress/";
+        private const string BackdropImageInfo = "/imageinfo/backdrop/";
 
 #if __EMBY__
         private readonly IHttpClient _httpClient;
@@ -60,12 +62,17 @@ namespace Jellyfin.Plugin.AVDC
             return $"{Config.Server}{Metadata}{vid}";
         }
 
-        public static string GetActressImageUrl(string name)
+        private static string GetActressImageInfoUrl(string name, int index)
         {
-            return $"{Config.Server}{ActressImage}{name}";
+            return $"{Config.Server}{ActressImageInfo}{name}/{index}";
         }
 
-        public static string GetActressImageUrl(string name, int index)
+        private static string GetBackdropImageInfoUrl(string vid)
+        {
+            return $"{Config.Server}{BackdropImageInfo}{vid}";
+        }
+
+        public static string GetActressImageUrl(string name, int index = 0)
         {
             return $"{Config.Server}{ActressImage}{name}/{index}";
         }
@@ -83,6 +90,43 @@ namespace Jellyfin.Plugin.AVDC
         public static string GetBackdropImageUrl(string vid)
         {
             return $"{Config.Server}{BackdropImage}{vid}";
+        }
+
+        public async Task<ImageInfo> GetActressImageInfo(string name, CancellationToken cancellationToken,
+            int index = 0)
+        {
+            try
+            {
+                var contentStream = await GetStream(GetActressImageInfoUrl(name, index), cancellationToken);
+                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
+            }
+            catch (Exception e)
+            {
+#if __EMBY__
+                _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", name, e.Message);
+#else
+                _logger.LogError("[AVDC] GetActressImageInfo for {Name} failed: {Message}", name, e.Message);
+#endif
+                return new ImageInfo();
+            }
+        }
+
+        public async Task<ImageInfo> GetBackdropImageInfo(string vid, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var contentStream = await GetStream(GetBackdropImageInfoUrl(vid), cancellationToken);
+                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
+            }
+            catch (Exception e)
+            {
+#if __EMBY__
+                _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", vid, e.Message);
+#else
+                _logger.LogError("[AVDC] GetActressImageInfo for {Vid} failed: {Message}", vid, e.Message);
+#endif
+                return new ImageInfo();
+            }
         }
 
         /// <summary>

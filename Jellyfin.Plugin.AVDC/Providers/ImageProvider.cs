@@ -55,24 +55,32 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteImageInfo>();
 
+            var imageInfo = await ApiClient.GetBackdropImageInfo(m.Vid, cancellationToken);
+
             return new List<RemoteImageInfo>
             {
                 new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
+                    Width = (int) (imageInfo.Height * (2.0 / 3.0)),
+                    Height = imageInfo.Height,
                     Url = ApiClient.GetPrimaryImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Thumb,
+                    Width = imageInfo.Width,
+                    Height = (int) (imageInfo.Width / (16.0 / 9.0)),
                     Url = ApiClient.GetThumbImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Backdrop,
+                    Width = imageInfo.Width,
+                    Height = imageInfo.Height,
                     Url = ApiClient.GetBackdropImageUrl(m.Vid)
                 }
             };

@@ -57,12 +57,18 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
             var images = new List<RemoteImageInfo>();
             for (var i = 0; i < actress.Images.Length; i++)
+            {
+                var imageInfo = await ApiClient.GetActressImageInfo(actress.Name, cancellationToken, i);
                 images.Add(new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
+                    Width = imageInfo.Width,
+                    Height = imageInfo.Height,
                     Url = ApiClient.GetActressImageUrl(actress.Name, i)
                 });
+            }
+
             return images;
         }
 
