@@ -27,11 +27,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
         }
 
 #if __EMBY__
-        public async Task<HttpResponseInfo> GetImageResponse(string url, CancellationToken cancellationToken)
+        public Task<HttpResponseInfo> GetImageResponse(string url, CancellationToken cancellationToken)
         {
             Logger.Info("[AVDC] GetImageResponse for url: {0}", url);
 
-            return await ApiClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            return ApiClient.GetAsync(url, cancellationToken);
         }
 #else
         public Task<HttpResponseMessage> GetImageResponse(string url, CancellationToken cancellationToken)
