@@ -4,6 +4,7 @@ using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
+
 #else
 using System.Net.Http;
 using Microsoft.Extensions.Logging;

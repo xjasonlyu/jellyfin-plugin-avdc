@@ -10,6 +10,7 @@ using MediaBrowser.Model.Serialization;
 using Jellyfin.Plugin.AVDC.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
+
 #else
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
