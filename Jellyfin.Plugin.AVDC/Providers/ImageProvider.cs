@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
+using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 using MediaBrowser.Model.Serialization;
@@ -65,6 +66,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Type = ImageType.Primary,
                     Width = (int) (imageInfo.Height * (2.0 / 3.0)),
                     Height = imageInfo.Height,
+                    RatingType = RatingType.Likes,
+                    CommunityRating = 1, // default
                     Url = ApiClient.GetPrimaryImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
@@ -73,6 +76,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Type = ImageType.Thumb,
                     Width = imageInfo.Width,
                     Height = (int) (imageInfo.Width / (16.0 / 9.0)),
+                    RatingType = RatingType.Likes,
+                    CommunityRating = 1, // default
                     Url = ApiClient.GetThumbImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
@@ -81,6 +86,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Type = ImageType.Backdrop,
                     Width = imageInfo.Width,
                     Height = imageInfo.Height,
+                    RatingType = RatingType.Likes,
+                    CommunityRating = 1, // default
                     Url = ApiClient.GetBackdropImageUrl(m.Vid)
                 }
             };

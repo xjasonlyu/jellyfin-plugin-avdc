@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
+using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 using MediaBrowser.Model.Serialization;
@@ -58,6 +59,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var images = new List<RemoteImageInfo>();
             for (var i = 0; i < actress.Images.Length; i++)
             {
+                double CalcRating(int index, int total)
+                {
+                    return 10.0 * (total - index) / total;
+                }
+
                 var imageInfo = await ApiClient.GetActressImageInfo(actress.Name, cancellationToken, i);
                 images.Add(new RemoteImageInfo
                 {
@@ -65,6 +71,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Type = ImageType.Primary,
                     Width = imageInfo.Width,
                     Height = imageInfo.Height,
+                    RatingType = RatingType.Score,
+                    CommunityRating = CalcRating(i, actress.Images.Length),
+                    VoteCount = actress.Images.Length,
                     Url = ApiClient.GetActressImageUrl(actress.Name, i)
                 });
             }
