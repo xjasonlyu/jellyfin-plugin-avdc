@@ -91,7 +91,7 @@ Jellyfin >= 10.7.0 || Emby >= 4.5.4
 - [JavBus](https://www.javbus.com/)
 - [JavDB](https://javdb.com/)
 - [~~JavLibrary~~](http://www.javlibrary.com/)
-- [MsgTage](https://www.mgstage.com/)
+- [MGS](https://www.mgstage.com/)
 - [Fanza](https://www.dmm.co.jp/)
 - [Dlsite](https://www.dlsite.com/)
 - [FC2](https://adult.contents.fc2.com/)
