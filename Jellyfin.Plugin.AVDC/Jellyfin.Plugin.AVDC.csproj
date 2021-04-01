@@ -8,13 +8,12 @@
         <Copyright>Copyright © $([System.DateTime]::Now.Year) AVDC</Copyright>
         <Version>$([System.DateTime]::Now.ToString(yyyy.MMdd.HHmm))</Version>
         <Authors>xjasonlyu</Authors>
-        <Description>AVDC Metadata Provider for Jellyfin</Description>
+        <Description>AVDC Metadata Provider for Jellyfin/Emby</Description>
         <PackageIcon>thumb.png</PackageIcon>
         <RepositoryType>Git</RepositoryType>
         <RepositoryUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc.git</RepositoryUrl>
         <PackageProjectUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/xjasonlyu/jellyfin-plugin-avdc/blob/main/LICENSE</PackageLicenseUrl>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
@@ -29,11 +28,6 @@
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
         <PackageReference Include="MediaBrowser.Server.Core" Version="4.5.0.28" />
-        <PackageReference Include="System.Text.Json" Version="5.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)'=='Release.Emby'">
-        <PackageReference Include="ILRepack" Version="2.0.18" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
@@ -48,11 +42,7 @@
         <EmbeddedResource Include="thumb.png" />
     </ItemGroup>
 
-    <Target Name="ILRepack" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release.Emby'">
-        <Exec Command="$(ILRepack) /out:$(AssemblyName).dll $(AssemblyName).dll System.Text.Json.dll System.Text.Encodings.Web.dll" WorkingDirectory="$(OutputPath)" />
-    </Target>
-
-    <Target Name="Zip" AfterTargets="ILRepack" Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='Release.Emby'">
+    <Target Name="Zip" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='Release.Emby'">
         <ItemGroup>
             <FilesToDelete Include="$(BaseOutputPath)Jellyfin.AVDC*.zip" Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'" />
             <FilesToDelete Include="$(BaseOutputPath)Emby.AVDC*.zip" Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'" />
