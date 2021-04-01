@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace Jellyfin.Plugin.AVDC.Models
 {
@@ -12,24 +11,24 @@ namespace Jellyfin.Plugin.AVDC.Models
             Images = Array.Empty<string>();
             Sign = string.Empty;
             Height = string.Empty;
-            CupSize = string.Empty;
-            BloodType = string.Empty;
+            Cup_Size = string.Empty;
+            Blood_Type = string.Empty;
             Nationality = string.Empty;
             Measurements = string.Empty;
             Birthday = new DateTime();
-            AvActivity = new DateTime();
+            Av_Activity = new DateTime();
         }
 
-        [JsonPropertyName("name")] public string Name { get; set; }
-        [JsonPropertyName("images")] public string[] Images { get; set; }
-        [JsonPropertyName("sign")] public string Sign { get; set; }
-        [JsonPropertyName("height")] public string Height { get; set; }
-        [JsonPropertyName("cup_size")] public string CupSize { get; set; }
-        [JsonPropertyName("blood_type")] public string BloodType { get; set; }
-        [JsonPropertyName("nationality")] public string Nationality { get; set; }
-        [JsonPropertyName("measurements")] public string Measurements { get; set; }
-        [JsonPropertyName("birthday")] public DateTime? Birthday { get; set; }
-        [JsonPropertyName("av_activity")] public DateTime? AvActivity { get; set; }
+        public string Name { get; set; }
+        public string[] Images { get; set; }
+        public string Sign { get; set; }
+        public string Height { get; set; }
+        public string Cup_Size { get; set; }
+        public string Blood_Type { get; set; }
+        public string Nationality { get; set; }
+        public string Measurements { get; set; }
+        public DateTime? Birthday { get; set; }
+        public DateTime? Av_Activity { get; set; }
 
         public bool Valid()
         {

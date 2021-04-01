@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 
 namespace Jellyfin.Plugin.AVDC.Models
 {
@@ -19,16 +18,16 @@ namespace Jellyfin.Plugin.AVDC.Models
             Actresses = Array.Empty<string>();
         }
 
-        [JsonPropertyName("vid")] public string Vid { get; set; }
-        [JsonPropertyName("title")] public string Title { get; set; }
-        [JsonPropertyName("overview")] public string Overview { get; set; }
-        [JsonPropertyName("label")] public string Label { get; set; }
-        [JsonPropertyName("series")] public string Series { get; set; }
-        [JsonPropertyName("studio")] public string Studio { get; set; }
-        [JsonPropertyName("director")] public string Director { get; set; }
-        [JsonPropertyName("release")] public DateTime Release { get; set; }
-        [JsonPropertyName("genres")] public string[] Genres { get; set; }
-        [JsonPropertyName("actresses")] public string[] Actresses { get; set; }
+        public string Vid { get; set; }
+        public string Title { get; set; }
+        public string Overview { get; set; }
+        public string Label { get; set; }
+        public string Series { get; set; }
+        public string Studio { get; set; }
+        public string Director { get; set; }
+        public DateTime Release { get; set; }
+        public string[] Genres { get; set; }
+        public string[] Actresses { get; set; }
 
         public bool Valid()
         {
