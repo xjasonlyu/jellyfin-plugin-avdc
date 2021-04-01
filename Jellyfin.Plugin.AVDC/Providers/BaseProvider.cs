@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
-
 #else
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
@@ -17,13 +17,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
         protected readonly ILogger Logger;
 
 #if __EMBY__
-        protected BaseProvider(IHttpClient httpClientFactory, ILogger logger)
+        protected BaseProvider(IHttpClient httpClientFactory,
 #else
-        protected BaseProvider(IHttpClientFactory httpClientFactory, ILogger logger)
+        protected BaseProvider(IHttpClientFactory httpClientFactory,
 #endif
+            IJsonSerializer jsonSerializer, ILogger logger)
         {
             Logger = logger;
-            ApiClient = new ApiClient(httpClientFactory, logger);
+            ApiClient = new ApiClient(httpClientFactory, jsonSerializer, logger);
         }
 
 #if __EMBY__

@@ -5,25 +5,29 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
+using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using Jellyfin.Plugin.AVDC.Extensions;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
-
 #else
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 #endif
+
 namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class ActressProvider : BaseProvider, IRemoteMetadataProvider<Person, PersonLookupInfo>, IHasOrder
     {
 #if __EMBY__
-        public ActressProvider(IHttpClient httpClient, ILogManager logManager) : base(httpClient,
+        public ActressProvider(IHttpClient httpClient, IJsonSerializer jsonSerializer, ILogManager logManager) : base(
+            httpClient,
+            jsonSerializer,
             logManager.CreateLogger<ActressProvider>())
 #else
-        public ActressProvider(IHttpClientFactory httpClientFactory, ILogger<ActressProvider> logger) : base(
-            httpClientFactory, logger)
+        public ActressProvider(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer,
+            ILogger<ActressProvider> logger) : base(
+            httpClientFactory, jsonSerializer, logger)
 #endif
         {
             // Empty

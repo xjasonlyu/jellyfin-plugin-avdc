@@ -1,19 +1,17 @@
 using System;
 using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
 using Jellyfin.Plugin.AVDC.Models;
+using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using System.Net;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
-
 #else
 using System.Net.Http;
 using System.Net.Http.Headers;
-using MediaBrowser.Common.Json;
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -32,20 +30,20 @@ namespace Jellyfin.Plugin.AVDC
 #else
         private readonly IHttpClientFactory _httpClientFactory;
 #endif
-        private readonly JsonSerializerOptions _jsonOptions;
         private readonly ILogger _logger;
+        private readonly IJsonSerializer _jsonSerializer;
 
 #if __EMBY__
-        public ApiClient(IHttpClient httpClient, ILogger logger)
+        public ApiClient(IHttpClient httpClient, IJsonSerializer jsonSerializer, ILogger logger)
         {
             _httpClient = httpClient;
 #else
-        public ApiClient(IHttpClientFactory httpClientFactory, ILogger logger)
+        public ApiClient(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
 #endif
             _logger = logger;
-            _jsonOptions = new JsonSerializerOptions();
+            _jsonSerializer = jsonSerializer;
         }
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
@@ -96,8 +94,7 @@ namespace Jellyfin.Plugin.AVDC
             try
             {
                 var contentStream = await GetStream(GetMetadataUrl(vid), cancellationToken);
-                return await JsonSerializer.DeserializeAsync<Metadata>(contentStream, _jsonOptions, cancellationToken)
-                    .ConfigureAwait(false);
+                return _jsonSerializer.DeserializeFromStream<Metadata>(contentStream);
             }
             catch (Exception e)
             {
@@ -121,8 +118,7 @@ namespace Jellyfin.Plugin.AVDC
             try
             {
                 var contentStream = await GetStream(GetActressUrl(name), cancellationToken);
-                return await JsonSerializer.DeserializeAsync<Actress>(contentStream, _jsonOptions, cancellationToken)
-                    .ConfigureAwait(false);
+                return _jsonSerializer.DeserializeFromStream<Actress>(contentStream);
             }
             catch (Exception e)
             {
