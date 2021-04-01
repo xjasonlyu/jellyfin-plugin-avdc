@@ -66,6 +66,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 new RemoteImageInfo
                 {
                     ProviderName = Name,
+                    Type = ImageType.Thumb,
+                    Url = ApiClient.GetThumbImageUrl(m.Vid)
+                },
+                new RemoteImageInfo
+                {
+                    ProviderName = Name,
                     Type = ImageType.Backdrop,
                     Url = ApiClient.GetBackdropImageUrl(m.Vid)
                 }
@@ -82,6 +88,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return new List<ImageType>
             {
                 ImageType.Primary,
+                ImageType.Thumb,
                 ImageType.Backdrop
             };
         }

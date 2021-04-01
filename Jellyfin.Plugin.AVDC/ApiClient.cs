@@ -24,6 +24,7 @@ namespace Jellyfin.Plugin.AVDC
         private const string Metadata = "/metadata/";
         private const string ActressImage = "/image/actress/";
         private const string PrimaryImage = "/image/primary/";
+        private const string ThumbImage = "/image/thumb/";
         private const string BackdropImage = "/image/backdrop/";
 
 #if __EMBY__
@@ -72,6 +73,11 @@ namespace Jellyfin.Plugin.AVDC
         public static string GetPrimaryImageUrl(string vid)
         {
             return $"{Config.Server}{PrimaryImage}{vid}";
+        }
+
+        public static string GetThumbImageUrl(string vid)
+        {
+            return $"{Config.Server}{ThumbImage}{vid}";
         }
 
         public static string GetBackdropImageUrl(string vid)
