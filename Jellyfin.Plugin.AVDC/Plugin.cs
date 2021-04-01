@@ -16,7 +16,7 @@ namespace Jellyfin.Plugin.AVDC
 #if __EMBY__
     public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IHasThumbImage
 #else
-    public class Plugin: BasePlugin<PluginConfiguration>, IHasWebPages
+    public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 #endif
     {
         public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer) : base(applicationPaths,

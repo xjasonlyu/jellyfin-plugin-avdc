@@ -1,5 +1,4 @@
 #if __EMBY__
-
 using System;
 using MediaBrowser.Model.Logging;
 
