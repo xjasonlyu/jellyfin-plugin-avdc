@@ -92,6 +92,13 @@ namespace Jellyfin.Plugin.AVDC
             return $"{Config.Server}{BackdropImage}{vid}";
         }
 
+        /// <summary>
+        ///     Get Actress Image Info by Name.
+        /// </summary>
+        /// <param name="name">Actress Name.</param>
+        /// <param name="cancellationToken">Used to cancel the request.</param>
+        /// <param name="index">Image Index Number.</param>
+        /// <returns>ImageInfo.</returns>
         public async Task<ImageInfo> GetActressImageInfo(string name, CancellationToken cancellationToken,
             int index = 0)
         {
@@ -111,6 +118,12 @@ namespace Jellyfin.Plugin.AVDC
             }
         }
 
+        /// <summary>
+        ///     Get Backdrop Image Info by Vid.
+        /// </summary>
+        /// <param name="vid">Video ID.</param>
+        /// <param name="cancellationToken">Used to cancel the request.</param>
+        /// <returns>ImageInfo.</returns>
         public async Task<ImageInfo> GetBackdropImageInfo(string vid, CancellationToken cancellationToken)
         {
             try
