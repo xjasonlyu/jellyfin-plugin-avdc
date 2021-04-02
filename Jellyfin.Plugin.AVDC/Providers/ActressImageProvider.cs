@@ -43,15 +43,18 @@ namespace Jellyfin.Plugin.AVDC.Providers
 #if __EMBY__
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, LibraryOptions libraryOptions,
             CancellationToken cancellationToken)
-        {
-            Logger.Info("[AVDC] GetImages for actress: {0}", item.Name);
 #else
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
-        {
-            Logger.LogInformation("[AVDC] GetImages for actress: {Name}", item.Name);
 #endif
+        {
             var name = item.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = item.Name;
+
+#if __EMBY__
+            Logger.Info("[AVDC] GetImages for actress: {0}", name);
+#else
+            Logger.LogInformation("[AVDC] GetImages for actress: {Name}", name);
+#endif
 
             var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new List<RemoteImageInfo>();

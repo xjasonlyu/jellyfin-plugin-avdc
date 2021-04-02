@@ -42,13 +42,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<MetadataResult<Person>> GetMetadata(PersonLookupInfo info,
             CancellationToken cancellationToken)
         {
-#if __EMBY__
-            Logger.Info("[AVDC] GetMetadata for actress: {0}", info.Name);
-#else
-            Logger.LogInformation("[AVDC] GetMetadata for actress: {Name}", info.Name);
-#endif
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
+
+#if __EMBY__
+            Logger.Info("[AVDC] GetMetadata for actress: {0}", name);
+#else
+            Logger.LogInformation("[AVDC] GetMetadata for actress: {Name}", name);
+#endif
 
             var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new MetadataResult<Person>();
@@ -77,13 +78,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             PersonLookupInfo info, CancellationToken cancellationToken)
         {
-#if __EMBY__
-            Logger.Info("[AVDC] SearchResults for actress: {0}", info.Name);
-#else
-            Logger.LogInformation("[AVDC] SearchResults for actress: {Name}", info.Name);
-#endif
             var name = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(name)) name = info.Name;
+
+#if __EMBY__
+            Logger.Info("[AVDC] SearchResults for actress: {0}", name);
+#else
+            Logger.LogInformation("[AVDC] SearchResults for actress: {Name}", name);
+#endif
 
             var actress = await ApiClient.GetActress(name, cancellationToken);
             if (!actress.Valid()) return new List<RemoteSearchResult>();

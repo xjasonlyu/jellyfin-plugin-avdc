@@ -43,13 +43,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)
         {
-#if __EMBY__
-            Logger.Info("[AVDC] GetMetadata for video: {0}", info.Name);
-#else
-            Logger.LogInformation("[AVDC] GetMetadata for video: {Name}", info.Name);
-#endif
             var vid = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name);
+
+#if __EMBY__
+            Logger.Info("[AVDC] GetMetadata for video: {0}", vid);
+#else
+            Logger.LogInformation("[AVDC] GetMetadata for video: {Vid}", vid);
+#endif
 
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new MetadataResult<Movie>();
@@ -111,13 +112,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
         public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(
             MovieInfo info, CancellationToken cancellationToken)
         {
-#if __EMBY__
-            Logger.Info("[AVDC] SearchResults for video: {0}", info.Name);
-#else
-            Logger.LogInformation("[AVDC] SearchResults for video: {Name}", info.Name);
-#endif
             var vid = info.GetProviderId(Name);
             if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name);
+
+#if __EMBY__
+            Logger.Info("[AVDC] SearchResults for video: {0}", vid);
+#else
+            Logger.LogInformation("[AVDC] SearchResults for video: {Vid}", vid);
+#endif
 
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteSearchResult>();
