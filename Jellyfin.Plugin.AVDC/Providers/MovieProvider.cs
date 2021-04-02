@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
@@ -49,15 +49,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation("[AVDC] GetMetadata for video: {Name}", info.Name);
 #endif
             var vid = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name);
 
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new MetadataResult<Movie>();
-
-            // Add `中文字幕` Genre
-            var genres = m.Genres.ToList();
-            if (Utility.HasChineseSubtitle(info) && !genres.Contains("中文字幕"))
-                genres.Add("中文字幕");
 
             // Create Studios
             var studios = new List<string>();
@@ -70,11 +65,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 Item = new Movie
                 {
-                    Name = Utility.FormatName(m),
+                    Name = FormatName(m),
                     OriginalTitle = m.Title,
                     Overview = m.Overview,
                     Tagline = tagline,
-                    Genres = genres.ToArray(),
+                    Genres = m.Genres,
                     Studios = studios.ToArray(),
                     PremiereDate = m.Release,
                     ProductionYear = m.Release.Year,
@@ -122,14 +117,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation("[AVDC] SearchResults for video: {Name}", info.Name);
 #endif
             var vid = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(info.Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name);
 
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteSearchResult>();
 
             var result = new RemoteSearchResult
             {
-                Name = Utility.FormatName(m),
+                Name = FormatName(m),
                 SearchProviderName = Name,
                 ProductionYear = m.Release.Year,
                 ImageUrl = ApiClient.GetPrimaryImageUrl(m.Vid)
@@ -137,6 +132,11 @@ namespace Jellyfin.Plugin.AVDC.Providers
             result.SetProviderId(Name, m.Vid);
 
             return new List<RemoteSearchResult> {result};
+        }
+
+        private static string FormatName(Metadata m)
+        {
+            return m.Vid.Contains(".") ? m.Vid : $"{m.Vid} {m.Title}";
         }
 
         private static void SetProviderIds(IHasProviderIds item, IEnumerable<string> links)

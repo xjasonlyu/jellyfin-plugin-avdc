@@ -43,5 +43,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return ApiClient.GetAsync(url, cancellationToken);
         }
 #endif
+
+        protected static string ExtractVid(string name)
+        {
+            return name; // do nothing
+        }
     }
 }

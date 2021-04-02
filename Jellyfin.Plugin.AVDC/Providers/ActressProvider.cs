@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
@@ -64,7 +65,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     PremiereDate = actress.Birthday,
                     ProductionYear = actress.Birthday?.Year,
                     ProductionLocations = locations.ToArray(),
-                    Overview = Utility.FormatOverview(actress)
+                    Overview = FormatOverview(actress)
                 },
                 HasMetadata = true
             };
@@ -96,6 +97,21 @@ namespace Jellyfin.Plugin.AVDC.Providers
             result.SetProviderId(Name, actress.Name);
 
             return new List<RemoteSearchResult> {result};
+        }
+
+        private static string FormatOverview(Actress a)
+        {
+            string G(string k, string v)
+            {
+                return !string.IsNullOrWhiteSpace(v) ? $"{k}: {v}\n" : string.Empty;
+            }
+
+            var overview = string.Empty;
+            overview += G("身高", a.Height);
+            overview += G("血型", a.Blood_Type);
+            overview += G("罩杯", a.Cup_Size);
+            overview += G("三围", a.Measurements);
+            return overview;
         }
     }
 }

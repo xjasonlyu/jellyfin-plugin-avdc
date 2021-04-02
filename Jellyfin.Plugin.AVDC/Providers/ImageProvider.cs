@@ -51,7 +51,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             Logger.LogInformation("[AVDC] GetImages for video: {Name}", item.Name);
 #endif
             var vid = item.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(vid)) vid = Utility.ExtractVid(item.FileNameWithoutExtension);
+            if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(item.FileNameWithoutExtension);
 
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new List<RemoteImageInfo>();
