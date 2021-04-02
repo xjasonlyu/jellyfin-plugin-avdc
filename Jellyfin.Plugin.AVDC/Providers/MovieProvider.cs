@@ -152,6 +152,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     item.SetProviderId(ProviderNames.JavDb, link);
                 else if (link.Contains("mgstage"))
                     item.SetProviderId(ProviderNames.Mgstage, link);
+                else if (link.Contains("dmm"))
+                    item.SetProviderId(ProviderNames.Fanza, link);
+                else if (link.Contains("fc2"))
+                    item.SetProviderId(ProviderNames.Fc2, link);
         }
     }
 }
