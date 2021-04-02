@@ -14,7 +14,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #if __EMBY__
         public string Name => Constants.Avsox;
 #else
-        public string ProviderName => ExternalIdNames.Avsox;
+        public string ProviderName => Constants.Avsox;
 #endif
         public string Key => Constants.Avsox;
 
