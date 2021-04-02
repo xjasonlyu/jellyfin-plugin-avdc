@@ -8,12 +8,12 @@ namespace Jellyfin.Plugin.AVDC.Extensions
     {
         public static ILogger CreateLogger<T>(this ILogManager factory)
         {
-            return factory.GetLogger(typeof(T).FullName);
+            return factory.GetLogger(Format(typeof(T)));
         }
 
-        public static ILogger CreateLogger(this ILogManager factory, Type type)
+        private static string Format(Type type)
         {
-            return factory.GetLogger(type.FullName);
+            return $"{Constants.Avdc}.{type.Name}";
         }
     }
 }
