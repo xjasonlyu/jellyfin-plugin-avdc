@@ -38,7 +38,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public int Order => 1;
 
-        public string Name => ProviderNames.Avdc;
+        public string Name => Constants.Avdc;
 
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)
@@ -143,19 +143,19 @@ namespace Jellyfin.Plugin.AVDC.Providers
         {
             foreach (var link in links)
                 if (link.Contains("avsox"))
-                    item.SetProviderId(ProviderNames.Avsox, link);
+                    item.SetProviderId(Constants.Avsox, link);
                 else if (link.Contains("jav321"))
-                    item.SetProviderId(ProviderNames.Jav321, link);
+                    item.SetProviderId(Constants.Jav321, link);
                 else if (link.Contains("javbus"))
-                    item.SetProviderId(ProviderNames.JavBus, link);
+                    item.SetProviderId(Constants.JavBus, link);
                 else if (link.Contains("javdb"))
-                    item.SetProviderId(ProviderNames.JavDb, link);
+                    item.SetProviderId(Constants.JavDb, link);
                 else if (link.Contains("mgstage"))
-                    item.SetProviderId(ProviderNames.Mgstage, link);
+                    item.SetProviderId(Constants.Mgstage, link);
                 else if (link.Contains("dmm"))
-                    item.SetProviderId(ProviderNames.Fanza, link);
+                    item.SetProviderId(Constants.Fanza, link);
                 else if (link.Contains("fc2"))
-                    item.SetProviderId(ProviderNames.Fc2, link);
+                    item.SetProviderId(Constants.Fc2, link);
         }
     }
 }

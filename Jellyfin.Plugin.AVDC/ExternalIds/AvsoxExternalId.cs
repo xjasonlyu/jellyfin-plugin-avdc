@@ -1,4 +1,3 @@
-using Jellyfin.Plugin.AVDC.Providers;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
@@ -13,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class AvsoxExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => ProviderNames.Avsox;
+        public string Name => Constants.Avsox;
 #else
         public string ProviderName => ExternalIdNames.Avsox;
 #endif
-        public string Key => ProviderNames.Avsox;
+        public string Key => Constants.Avsox;
 
         public string UrlFormatString => "{0}";
 

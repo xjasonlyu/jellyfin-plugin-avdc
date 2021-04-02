@@ -1,4 +1,3 @@
-using Jellyfin.Plugin.AVDC.Providers;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
@@ -13,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class FanzaExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => ProviderNames.Fanza;
+        public string Name => Constants.Fanza;
 #else
-        public string ProviderName => ProviderNames.Fanza;
+        public string ProviderName => Constants.Fanza;
 #endif
-        public string Key => ProviderNames.Fanza;
+        public string Key => Constants.Fanza;
 
         public string UrlFormatString => "{0}";
 

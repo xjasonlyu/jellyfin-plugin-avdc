@@ -1,6 +1,6 @@
-namespace Jellyfin.Plugin.AVDC.Providers
+namespace Jellyfin.Plugin.AVDC
 {
-    public class ProviderNames
+    public class Constants
     {
         public const string Avdc = "AVDC";
         public const string Avsox = "AVSOX";
