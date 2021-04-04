@@ -9,6 +9,7 @@ namespace Jellyfin.Plugin.AVDC
         public const string Jav321 = "Jav321";
         public const string JavBus = "JavBus";
         public const string JavDb = "JavDB";
-        public const string Mgstage = "MGS";
+        public const string Mgstage = "MGStage";
+        public const string Xslist = "Xslist";
     }
 }

@@ -81,7 +81,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             result.Item.SetProviderId(Name, m.Vid);
 
             // Set All External Links
-            SetProviderIds(result.Item, m.Website);
+            SetProviderIds(result.Item, m.Providers, m.Sources);
 
             // Add Director
             if (!string.IsNullOrWhiteSpace(m.Director))
@@ -139,25 +139,6 @@ namespace Jellyfin.Plugin.AVDC.Providers
         private static string FormatName(Metadata m)
         {
             return m.Vid.Contains(".") ? m.Vid : $"{m.Vid} {m.Title}";
-        }
-
-        private static void SetProviderIds(IHasProviderIds item, IEnumerable<string> links)
-        {
-            foreach (var link in links)
-                if (link.Contains("avsox"))
-                    item.SetProviderId(Constants.Avsox, link);
-                else if (link.Contains("jav321"))
-                    item.SetProviderId(Constants.Jav321, link);
-                else if (link.Contains("javbus"))
-                    item.SetProviderId(Constants.JavBus, link);
-                else if (link.Contains("javdb"))
-                    item.SetProviderId(Constants.JavDb, link);
-                else if (link.Contains("mgstage"))
-                    item.SetProviderId(Constants.Mgstage, link);
-                else if (link.Contains("dmm"))
-                    item.SetProviderId(Constants.Fanza, link);
-                else if (link.Contains("fc2"))
-                    item.SetProviderId(Constants.Fc2, link);
         }
     }
 }

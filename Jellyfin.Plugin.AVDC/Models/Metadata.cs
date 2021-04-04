@@ -2,7 +2,7 @@ using System;
 
 namespace Jellyfin.Plugin.AVDC.Models
 {
-    public class Metadata
+    public class Metadata : BaseModel
     {
         public Metadata()
         {
@@ -15,7 +15,6 @@ namespace Jellyfin.Plugin.AVDC.Models
             Director = string.Empty;
             Release = new DateTime();
             Genres = Array.Empty<string>();
-            Website = Array.Empty<string>();
             Actresses = Array.Empty<string>();
         }
 
@@ -28,7 +27,6 @@ namespace Jellyfin.Plugin.AVDC.Models
         public string Director { get; set; }
         public DateTime Release { get; set; }
         public string[] Genres { get; set; }
-        public string[] Website { get; set; }
         public string[] Actresses { get; set; }
 
         public bool Valid()

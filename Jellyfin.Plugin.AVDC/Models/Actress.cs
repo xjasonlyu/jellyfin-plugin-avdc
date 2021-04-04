@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Jellyfin.Plugin.AVDC.Models
 {
-    public class Actress
+    public class Actress : BaseModel
     {
         public Actress()
         {

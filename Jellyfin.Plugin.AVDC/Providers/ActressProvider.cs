@@ -72,6 +72,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
             };
             result.Item.SetProviderId(Name, actress.Name);
 
+            // Set All External Links
+            SetProviderIds(result.Item, actress.Providers, actress.Sources);
+
             return result;
         }
 

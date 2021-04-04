@@ -1,5 +1,7 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using MediaBrowser.Common.Net;
@@ -47,6 +49,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
         protected static string ExtractVid(string name)
         {
             return name; // do nothing
+        }
+
+        protected static void SetProviderIds(IHasProviderIds item, string[] providers, string[] sources)
+        {
+            for (var i = 0; i < Math.Min(providers.Length, sources.Length); i++)
+                item.SetProviderId(providers[i], sources[i]);
         }
     }
 }
