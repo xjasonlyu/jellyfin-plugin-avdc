@@ -14,7 +14,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #if __EMBY__
         public string Name => Constants.Xslist;
 #else
-        public string ProviderName => Constants.XsList;
+        public string ProviderName => Constants.Xslist;
 #endif
         public string Key => Constants.Xslist;
 
