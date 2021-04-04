@@ -81,7 +81,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     OriginalTitle = m.Title,
                     Overview = m.Overview,
                     Tagline = tagline,
-                    Genres = m.Genres,
+                    Genres = genres.ToArray(),
                     Studios = studios.ToArray(),
                     PremiereDate = m.Release,
                     ProductionYear = m.Release.Year,
@@ -173,7 +173,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
             filename = r.Replace(filename, string.Empty);
 
-            return filename.ToUpper().Substring(Math.Max(0, filename.Length - 2)).Equals("-C");
+            return filename.Substring(Math.Max(0, filename.Length - 2))
+                .Equals("-C", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
