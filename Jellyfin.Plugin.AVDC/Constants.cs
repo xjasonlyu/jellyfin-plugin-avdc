@@ -1,6 +1,6 @@
 namespace Jellyfin.Plugin.AVDC
 {
-    public class Constants
+    public static class Constants
     {
         public const string Avdc = "AVDC";
         public const string Avsox = "AVSOX";
