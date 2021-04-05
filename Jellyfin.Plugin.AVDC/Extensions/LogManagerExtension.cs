@@ -4,7 +4,7 @@ using MediaBrowser.Model.Logging;
 
 namespace Jellyfin.Plugin.AVDC.Extensions
 {
-    public static class LogManagerExtension
+    internal static class LogManagerExtension
     {
         public static ILogger CreateLogger<T>(this ILogManager factory)
         {
