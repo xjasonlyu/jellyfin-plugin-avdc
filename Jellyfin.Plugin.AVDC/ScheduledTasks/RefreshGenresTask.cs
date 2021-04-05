@@ -72,14 +72,17 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                     genres.Add(Genres.ChineseSubtitle);
 
                 // Replace Genres
-                foreach (var genre in genres.Where(genre => Genres.ShouldBeReplaced.ContainsKey(genre)))
+                foreach (var genre in genres.Where(genre => Genres.Substitution.ContainsKey(genre)))
                 {
-                    var value = Genres.ShouldBeReplaced[genre];
+                    var value = Genres.Substitution[genre];
                     if (string.IsNullOrEmpty(value))
                         genres.Remove(genre); // should just be removed
                     else
                         genres[genres.IndexOf(genre)] = value; // replace
                 }
+
+                // Remove Duplicates
+                genres = genres.Distinct().ToList();
 
                 // Skip updating item if equal
                 if (item.Genres.SequenceEqual(genres, StringComparer.Ordinal)) continue;
