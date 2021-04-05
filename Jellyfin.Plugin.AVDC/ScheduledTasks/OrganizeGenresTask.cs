@@ -19,30 +19,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.AVDC.ScheduledTasks
 {
-    public class RefreshGenresTask : IScheduledTask
+    public class OrganizeGenresTask : IScheduledTask
     {
         private readonly ILibraryManager _libraryManager;
         private readonly ILogger _logger;
 
 #if __EMBY__
-        public RefreshGenresTask(ILogManager logManager, ILibraryManager libraryManager)
+        public OrganizeGenresTask(ILogManager logManager, ILibraryManager libraryManager)
         {
-            _logger = logManager.CreateLogger<RefreshGenresTask>();
+            _logger = logManager.CreateLogger<OrganizeGenresTask>();
             _libraryManager = libraryManager;
         }
 #else
-        public RefreshGenresTask(ILogger<RefreshGenresTask> logger, ILibraryManager libraryManager)
+        public OrganizeGenresTask(ILogger<OrganizeGenresTask> logger, ILibraryManager libraryManager)
         {
             _logger = logger;
             _libraryManager = libraryManager;
         }
 #endif
 
-        public string Key => $"{Constant.Avdc}RefreshGenres";
+        public string Key => $"{Constant.Avdc}OrganizeGenres";
 
-        public string Name => "Refresh Genres";
+        public string Name => "Organize Genres";
 
-        public string Description => "Refresh metadata genres provided by AVDC in library.";
+        public string Description => "Organize metadata genres provided by AVDC in library.";
 
         public string Category => Constant.Avdc;
 
@@ -90,10 +90,10 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                 item.Genres = genres.ToArray();
 
 #if __EMBY__
-                _logger.Info("[AVDC] RefreshGenres for video: {0}", item.Name);
+                _logger.Info("[AVDC] OrganizeGenres for video: {0}", item.Name);
                 _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit);
 #else
-                _logger.LogInformation("[AVDC] RefreshGenres for video: {Name}", item.Name);
+                _logger.LogInformation("[AVDC] OrganizeGenres for video: {Name}", item.Name);
                 await _libraryManager
                     .UpdateItemAsync(item, item, ItemUpdateType.MetadataEdit, cancellationToken)
                     .ConfigureAwait(false);
