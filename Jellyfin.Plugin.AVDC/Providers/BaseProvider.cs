@@ -50,7 +50,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         protected static string ExtractVid(string name)
         {
-            return name; // do nothing
+            return name.Where(c => c < 128).Aggregate(string.Empty, (s, c) => s + c);
         }
 
         private static string[] ProviderNames => typeof(Constants).GetFields(BindingFlags.Public | BindingFlags.Static)
