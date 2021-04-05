@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class AvsoxExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Avsox;
+        public string Name => Constant.Avsox;
 #else
-        public string ProviderName => Constants.Avsox;
+        public string ProviderName => Constant.Avsox;
 #endif
-        public string Key => Constants.Avsox;
+        public string Key => Constant.Avsox;
 
         public string UrlFormatString => "{0}";
 

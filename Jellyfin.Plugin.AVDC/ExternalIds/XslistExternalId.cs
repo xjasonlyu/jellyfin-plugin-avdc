@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class XslistExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Xslist;
+        public string Name => Constant.Xslist;
 #else
-        public string ProviderName => Constants.Xslist;
+        public string ProviderName => Constant.Xslist;
 #endif
-        public string Key => Constants.Xslist;
+        public string Key => Constant.Xslist;
 
         public string UrlFormatString => "{0}";
 

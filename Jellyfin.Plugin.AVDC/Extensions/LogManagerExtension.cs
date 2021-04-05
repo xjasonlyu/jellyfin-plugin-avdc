@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.AVDC.Extensions
 
         private static string Format(Type type)
         {
-            return $"{Constants.Avdc}.{type.Name}";
+            return $"{Constant.Avdc}.{type.Name}";
         }
     }
 }

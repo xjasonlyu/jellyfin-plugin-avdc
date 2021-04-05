@@ -40,7 +40,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         public int Order => 1;
 
-        public string Name => Constants.Avdc;
+        public string Name => Constant.Avdc;
 
         public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
             CancellationToken cancellationToken)

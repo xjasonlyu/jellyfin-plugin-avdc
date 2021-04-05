@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class MgstageExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Mgstage;
+        public string Name => Constant.Mgstage;
 #else
-        public string ProviderName => Constants.Mgstage;
+        public string ProviderName => Constant.Mgstage;
 #endif
-        public string Key => Constants.Mgstage;
+        public string Key => Constant.Mgstage;
 
         public string UrlFormatString => "{0}";
 

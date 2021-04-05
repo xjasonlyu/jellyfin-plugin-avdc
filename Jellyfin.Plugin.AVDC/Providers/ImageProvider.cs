@@ -38,7 +38,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
         }
 
         public int Order => 1;
-        public string Name => Constants.Avdc;
+        public string Name => Constant.Avdc;
 
 #if __EMBY__
         public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, LibraryOptions libraryOptions,

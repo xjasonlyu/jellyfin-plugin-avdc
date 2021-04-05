@@ -57,7 +57,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return vid;
         }
 
-        private static string[] ProviderNames => typeof(Constants).GetFields(BindingFlags.Public | BindingFlags.Static)
+        private static string[] ProviderNames => typeof(Constant).GetFields(BindingFlags.Public | BindingFlags.Static)
             .Select(x => x.GetValue(null).ToString()).ToArray();
 
         protected static void SetProviderIds(IHasProviderIds item, string[] providers, string[] sources)
@@ -65,7 +65,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             for (var i = 0; i < Math.Min(providers.Length, sources.Length); i++)
             {
                 var name = Array.Find(ProviderNames, e => e.Equals(providers[i], StringComparison.OrdinalIgnoreCase));
-                if (!string.IsNullOrEmpty(name) && !name.Equals(Constants.Avdc))
+                if (!string.IsNullOrEmpty(name) && !name.Equals(Constant.Avdc))
                     item.SetProviderId(name, sources[i]);
             }
         }

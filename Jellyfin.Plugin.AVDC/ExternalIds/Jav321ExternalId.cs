@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class Jav321ExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Jav321;
+        public string Name => Constant.Jav321;
 #else
-        public string ProviderName => Constants.Jav321;
+        public string ProviderName => Constant.Jav321;
 #endif
-        public string Key => Constants.Jav321;
+        public string Key => Constant.Jav321;
 
         public string UrlFormatString => "{0}";
 

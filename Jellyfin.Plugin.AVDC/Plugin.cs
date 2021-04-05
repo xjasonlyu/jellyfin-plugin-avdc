@@ -25,7 +25,7 @@ namespace Jellyfin.Plugin.AVDC
             Instance = this;
         }
 
-        public override string Name => Constants.Avdc;
+        public override string Name => Constant.Avdc;
 
 #if __EMBY__
         public override string Description => "AVDC Metadata Provider for Emby";

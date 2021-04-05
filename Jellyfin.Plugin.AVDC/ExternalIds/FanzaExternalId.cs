@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class FanzaExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Fanza;
+        public string Name => Constant.Fanza;
 #else
-        public string ProviderName => Constants.Fanza;
+        public string ProviderName => Constant.Fanza;
 #endif
-        public string Key => Constants.Fanza;
+        public string Key => Constant.Fanza;
 
         public string UrlFormatString => "{0}";
 

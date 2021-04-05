@@ -38,13 +38,13 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
         }
 #endif
 
-        public string Key => $"{Constants.Avdc}RefreshGenres";
+        public string Key => $"{Constant.Avdc}RefreshGenres";
 
         public string Name => "Refresh Genres";
 
         public string Description => "Refresh metadata genres provided by AVDC in library.";
 
-        public string Category => Constants.Avdc;
+        public string Category => Constant.Avdc;
 
         public async Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
         {
@@ -55,7 +55,7 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             {
                 MediaTypes = new[] {MediaType.Video},
                 IncludeItemTypes = new[] {nameof(Movie)}
-            }).Where(item => item.ProviderIds.ContainsKey(Constants.Avdc)).ToList();
+            }).Where(item => item.ProviderIds.ContainsKey(Constant.Avdc)).ToList();
 
             foreach (var (idx, item) in items.WithIndex())
             {

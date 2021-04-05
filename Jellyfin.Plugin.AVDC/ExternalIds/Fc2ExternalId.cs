@@ -12,11 +12,11 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
     public class Fc2ExternalId : IExternalId
     {
 #if __EMBY__
-        public string Name => Constants.Fc2;
+        public string Name => Constant.Fc2;
 #else
-        public string ProviderName => Constants.Fc2;
+        public string ProviderName => Constant.Fc2;
 #endif
-        public string Key => Constants.Fc2;
+        public string Key => Constant.Fc2;
 
         public string UrlFormatString => "{0}";
 
