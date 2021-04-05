@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Jellyfin.Plugin.AVDC.Helpers;
 using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
@@ -26,8 +24,6 @@ namespace Jellyfin.Plugin.AVDC.Providers
 {
     public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
     {
-        private const string ChineseSubtitle = "中文字幕";
-
 #if __EMBY__
         public MovieProvider(IHttpClient httpClient, IJsonSerializer jsonSerializer, ILogManager logManager) : base(
             httpClient,
@@ -61,10 +57,10 @@ namespace Jellyfin.Plugin.AVDC.Providers
             var m = await ApiClient.GetMetadata(vid, cancellationToken);
             if (!m.Valid()) return new MetadataResult<Movie>();
 
-            // Add Chinese Subtitle Genre
+            // Add `ChineseSubtitle` Genre
             var genres = m.Genres.ToList();
-            if (!genres.Contains(ChineseSubtitle) && HasChineseSubtitle(info))
-                genres.Add(ChineseSubtitle);
+            if (!genres.Contains(Genres.ChineseSubtitle) && Genres.HasChineseSubtitle(info))
+                genres.Add(Genres.ChineseSubtitle);
 
             // Create Studios
             var studios = new List<string>();
@@ -144,37 +140,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
             };
             result.SetProviderId(Name, m.Vid);
 
-#if __EMBY__
-            // TODO: replace with better solution.
-            if (HasChineseSubtitle(info))
-                result.Name += $"【{ChineseSubtitle}】";
-#endif
-
             return new List<RemoteSearchResult> {result};
         }
 
         private static string FormatName(Metadata m)
         {
             return m.Vid.Contains(".") ? m.Vid : $"{m.Vid} {m.Title}";
-        }
-
-        private static bool HasChineseSubtitle(MovieInfo info)
-        {
-#if __EMBY__
-            var filename = Path.GetFileNameWithoutExtension(info.Name);
-#else
-            var filename = Path.GetFileNameWithoutExtension(info.Path);
-#endif
-
-            if (filename.Contains(ChineseSubtitle))
-                return true;
-
-            var r = new Regex(@"-cd\d+$",
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-            filename = r.Replace(filename, string.Empty);
-
-            return filename.Substring(Math.Max(0, filename.Length - 2))
-                .Equals("-C", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
