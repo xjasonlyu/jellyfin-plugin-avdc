@@ -61,39 +61,40 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             {
                 progress?.Report((double) idx / items.Count * 100);
 
-                if (item.Genres != null && item.Genres.Any())
+                // Skip this item if empty
+                if (item.Genres == null || !item.Genres.Any()) continue;
+
+                var genres = item.Genres.ToList();
+
+                // Add `ChineseSubtitle` Genre
+                if (!genres.Contains(Genres.ChineseSubtitle) &&
+                    Genres.HasChineseSubtitle(item.FileNameWithoutExtension))
+                    genres.Add(Genres.ChineseSubtitle);
+
+                // Replace Genres
+                foreach (var genre in genres.Where(genre => Genres.ShouldBeReplaced.ContainsKey(genre)))
                 {
-                    var genres = item.Genres.ToList();
-
-                    // Add `ChineseSubtitle` Genre
-                    if (!genres.Contains(Genres.ChineseSubtitle) &&
-                        Genres.HasChineseSubtitle(item.FileNameWithoutExtension))
-                        genres.Add(Genres.ChineseSubtitle);
-
-                    // Remove Meaningless Genres
-                    foreach (var genre in genres.Where(genre => Genres.ShouldBeReplaced.ContainsKey(genre)))
-                    {
-                        var value = Genres.ShouldBeReplaced[genre];
-                        if (string.IsNullOrEmpty(value))
-                            genres.Remove(genre); // should just be removed
-                        else
-                            genres[genres.IndexOf(genre)] = value; // replace
-                    }
-
-                    if (!item.Genres.SequenceEqual(genres, StringComparer.Ordinal))
-                    {
-                        item.Genres = genres.ToArray();
-#if __EMBY__
-                        _logger.Info("[AVDC] RefreshGenres for video: {0}", item.Name);
-                        _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit);
-#else
-                        _logger.LogInformation("[AVDC] RefreshGenres for video: {Name}", item.Name);
-                        await _libraryManager
-                            .UpdateItemAsync(item, item, ItemUpdateType.MetadataEdit, cancellationToken)
-                            .ConfigureAwait(false);
-#endif
-                    }
+                    var value = Genres.ShouldBeReplaced[genre];
+                    if (string.IsNullOrEmpty(value))
+                        genres.Remove(genre); // should just be removed
+                    else
+                        genres[genres.IndexOf(genre)] = value; // replace
                 }
+
+                // Skip updating item if equal
+                if (item.Genres.SequenceEqual(genres, StringComparer.Ordinal)) continue;
+
+                item.Genres = genres.ToArray();
+
+#if __EMBY__
+                _logger.Info("[AVDC] RefreshGenres for video: {0}", item.Name);
+                _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit);
+#else
+                _logger.LogInformation("[AVDC] RefreshGenres for video: {Name}", item.Name);
+                await _libraryManager
+                    .UpdateItemAsync(item, item, ItemUpdateType.MetadataEdit, cancellationToken)
+                    .ConfigureAwait(false);
+#endif
             }
 
             progress?.Report(100);
