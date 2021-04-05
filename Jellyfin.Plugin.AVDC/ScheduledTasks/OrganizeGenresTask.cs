@@ -66,13 +66,8 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
 
                 var genres = item.Genres.ToList();
 
-                // Add `ChineseSubtitle` Genre
-                if (!genres.Contains(Genres.ChineseSubtitle) &&
-                    Genres.HasChineseSubtitle(item.FileNameWithoutExtension))
-                    genres.Add(Genres.ChineseSubtitle);
-
                 // Replace Genres
-                foreach (var genre in genres.Where(genre => Genres.Substitution.ContainsKey(genre)))
+                foreach (var genre in genres.Where(genre => Genres.Substitution.ContainsKey(genre)).ToArray())
                 {
                     var value = Genres.Substitution[genre];
                     if (string.IsNullOrEmpty(value))
@@ -80,6 +75,11 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                     else
                         genres[genres.IndexOf(genre)] = value; // replace
                 }
+
+                // Add `ChineseSubtitle` Genre
+                if (!genres.Contains(Genres.ChineseSubtitle) &&
+                    Genres.HasChineseSubtitle(item.FileNameWithoutExtension))
+                    genres.Add(Genres.ChineseSubtitle);
 
                 // Remove Duplicates
                 genres = genres.Distinct().ToList();
