@@ -5,8 +5,8 @@
         <TargetFramework Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">netstandard2.0</TargetFramework>
         <AssemblyName>AVDC</AssemblyName>
         <RootNamespace>Jellyfin.Plugin.AVDC</RootNamespace>
-        <Copyright>Copyright © $([System.DateTime]::Now.Year) AVDC</Copyright>
-        <Version>$([System.DateTime]::Now.ToString(yyyy.MMdd.HHmm))</Version>
+        <Copyright>Copyright © $([System.DateTime]::UtcNow.Year) AVDC</Copyright>
+        <Version>$([System.DateTime]::UtcNow.ToString(yyyy.MMdd.HHmm))</Version>
         <Authors>xjasonlyu</Authors>
         <Description>AVDC Metadata Provider for Jellyfin/Emby</Description>
         <PackageIcon>thumb.png</PackageIcon>
