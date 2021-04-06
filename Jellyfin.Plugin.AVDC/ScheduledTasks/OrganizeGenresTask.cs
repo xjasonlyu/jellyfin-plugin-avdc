@@ -108,8 +108,7 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
         {
             yield return new TaskTriggerInfo
             {
-                Type = TaskTriggerInfo.TriggerWeekly,
-                DayOfWeek = DayOfWeek.Sunday,
+                Type = TaskTriggerInfo.TriggerDaily,
                 TimeOfDayTicks = TimeSpan.FromHours(2).Ticks
             };
         }
