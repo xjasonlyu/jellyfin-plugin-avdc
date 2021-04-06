@@ -8,6 +8,7 @@ using Jellyfin.Plugin.AVDC.Helpers;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Sorting;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Tasks;
 #if __EMBY__
@@ -82,12 +83,12 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                     genres.Add(Genres.ChineseSubtitle);
 
                 // Remove Duplicates
-                genres = genres.Distinct().ToList();
+                var orderedGenres = genres.Distinct().OrderByString(g => g).ToList();
 
                 // Skip updating item if equal
-                if (item.Genres.SequenceEqual(genres, StringComparer.Ordinal)) continue;
+                if (item.Genres.SequenceEqual(orderedGenres, StringComparer.Ordinal)) continue;
 
-                item.Genres = genres.ToArray();
+                item.Genres = orderedGenres.ToArray();
 
 #if __EMBY__
                 _logger.Info("[AVDC] OrganizeGenres for video: {0}", item.Name);
