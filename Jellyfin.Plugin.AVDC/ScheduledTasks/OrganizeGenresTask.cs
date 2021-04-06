@@ -47,6 +47,15 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
 
         public string Category => Constant.Avdc;
 
+        public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
+        {
+            yield return new TaskTriggerInfo
+            {
+                Type = TaskTriggerInfo.TriggerDaily,
+                TimeOfDayTicks = TimeSpan.FromHours(2).Ticks
+            };
+        }
+
         public async Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
         {
             await Task.Yield();
@@ -102,15 +111,6 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             }
 
             progress?.Report(100);
-        }
-
-        public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
-        {
-            yield return new TaskTriggerInfo
-            {
-                Type = TaskTriggerInfo.TriggerDaily,
-                TimeOfDayTicks = TimeSpan.FromHours(2).Ticks
-            };
         }
     }
 }
