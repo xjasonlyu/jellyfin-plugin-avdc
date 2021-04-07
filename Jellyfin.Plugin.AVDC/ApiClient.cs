@@ -213,7 +213,9 @@ namespace Jellyfin.Plugin.AVDC
             var options = new HttpRequestOptions
             {
                 Url = url,
-                CancellationToken = cancellationToken
+                CancellationToken = cancellationToken,
+                EnableDefaultUserAgent = true,
+                TimeoutMs = 60000
             };
 
             // Add Auth Token Header
