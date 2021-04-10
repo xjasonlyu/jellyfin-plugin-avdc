@@ -60,6 +60,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (!m.Valid()) return new List<RemoteImageInfo>();
 
             var imageInfo = await ApiClient.GetBackdropImageInfo(m.Vid, cancellationToken);
+            if (!imageInfo.Valid())
+#if __EMBY__
+                Logger.Warn("[AVDC] Invalid ImageInfo: {0}", m.Vid);
+#else
+                Logger.LogWarning("[AVDC] Invalid ImageInfo: {Vid}", m.Vid);
+#endif
 
             return new List<RemoteImageInfo>
             {

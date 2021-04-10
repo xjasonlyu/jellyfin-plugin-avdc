@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.AVDC.Models
 
         public bool Valid()
         {
-            return true; // always valid
+            return Width > 0 && Height > 0;
         }
     }
 }
