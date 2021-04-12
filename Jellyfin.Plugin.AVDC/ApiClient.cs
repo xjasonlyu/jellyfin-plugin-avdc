@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Jellyfin.Plugin.AVDC.Configuration;
 using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Model.Serialization;
@@ -12,7 +13,6 @@ using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 
 #else
-using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -52,44 +52,49 @@ namespace Jellyfin.Plugin.AVDC
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
+        private static string WithToken(string url)
+        {
+            return string.IsNullOrEmpty(Config.Token) ? url : $"{url}?token={HttpUtility.UrlEncode(Config.Token)}";
+        }
+
         private static string GetActressUrl(string name)
         {
-            return $"{Config.Server}{Actress}{name}";
+            return WithToken($"{Config.Server}{Actress}{name}");
         }
 
         private static string GetMetadataUrl(string vid)
         {
-            return $"{Config.Server}{Metadata}{vid}";
+            return WithToken($"{Config.Server}{Metadata}{vid}");
         }
 
         private static string GetActressImageInfoUrl(string name, int index)
         {
-            return $"{Config.Server}{ActressImageInfo}{name}/{index}";
+            return WithToken($"{Config.Server}{ActressImageInfo}{name}/{index}");
         }
 
         private static string GetBackdropImageInfoUrl(string vid)
         {
-            return $"{Config.Server}{BackdropImageInfo}{vid}";
+            return WithToken($"{Config.Server}{BackdropImageInfo}{vid}");
         }
 
         public static string GetActressImageUrl(string name, int index = 0)
         {
-            return $"{Config.Server}{ActressImage}{name}/{index}";
+            return WithToken($"{Config.Server}{ActressImage}{name}/{index}");
         }
 
         public static string GetPrimaryImageUrl(string vid)
         {
-            return $"{Config.Server}{PrimaryImage}{vid}";
+            return WithToken($"{Config.Server}{PrimaryImage}{vid}");
         }
 
         public static string GetThumbImageUrl(string vid)
         {
-            return $"{Config.Server}{ThumbImage}{vid}";
+            return WithToken($"{Config.Server}{ThumbImage}{vid}");
         }
 
         public static string GetBackdropImageUrl(string vid)
         {
-            return $"{Config.Server}{BackdropImage}{vid}";
+            return WithToken($"{Config.Server}{BackdropImage}{vid}");
         }
 
         /// <summary>
@@ -218,11 +223,7 @@ namespace Jellyfin.Plugin.AVDC
                 TimeoutMs = 60000
             };
 
-            // Add Auth Token Header
-            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
-                options.RequestHeaders.Add("Authorization", $"Bearer {Config.Token}");
-
-            var response = await _httpClient.GetResponse(options);
+            var response = await _httpClient.GetResponse(options).ConfigureAwait(false);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new HttpRequestException($"Bad Status Code: {response.StatusCode}");
 
@@ -242,11 +243,6 @@ namespace Jellyfin.Plugin.AVDC
             cancellationToken.ThrowIfCancellationRequested();
 
             var httpClient = _httpClientFactory.CreateClient();
-
-            // Add Auth Token Header
-            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
-                httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", Config.Token);
 
             var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
