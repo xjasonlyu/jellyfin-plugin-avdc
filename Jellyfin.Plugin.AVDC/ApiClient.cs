@@ -58,17 +58,12 @@ namespace Jellyfin.Plugin.AVDC
 
             if (string.IsNullOrEmpty(Config.Token)) return originUrl;
 
-            var url = new Uri(originUrl);
+            var url = new UriBuilder(originUrl);
             var query = HttpUtility.ParseQueryString(url.Query);
             query.Add("token", Config.Token);
+            url.Query = query.ToString();
 
-            return new UriBuilder(
-                    url.Scheme,
-                    url.Host,
-                    url.Port,
-                    url.AbsolutePath,
-                    query.ToString())
-                .ToString();
+            return url.ToString();
         }
 
         private static string GetActressUrl(string name)
