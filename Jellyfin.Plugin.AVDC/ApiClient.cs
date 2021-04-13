@@ -52,8 +52,10 @@ namespace Jellyfin.Plugin.AVDC
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
-        private static string WithToken(string originUrl)
+        private static string ComposeUrl(string pathAndQuery)
         {
+            var originUrl = $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
+
             if (string.IsNullOrEmpty(Config.Token)) return originUrl;
 
             var url = new Uri(originUrl);
@@ -71,42 +73,42 @@ namespace Jellyfin.Plugin.AVDC
 
         private static string GetActressUrl(string name)
         {
-            return WithToken($"{Config.Server}{Actress}{name}");
+            return ComposeUrl($"{Actress}{name}");
         }
 
         private static string GetMetadataUrl(string vid)
         {
-            return WithToken($"{Config.Server}{Metadata}{vid}");
+            return ComposeUrl($"{Metadata}{vid}");
         }
 
         private static string GetActressImageInfoUrl(string name, int index)
         {
-            return WithToken($"{Config.Server}{ActressImageInfo}{name}/{index}");
+            return ComposeUrl($"{ActressImageInfo}{name}/{index}");
         }
 
         private static string GetBackdropImageInfoUrl(string vid)
         {
-            return WithToken($"{Config.Server}{BackdropImageInfo}{vid}");
+            return ComposeUrl($"{BackdropImageInfo}{vid}");
         }
 
         public static string GetActressImageUrl(string name, int index = 0)
         {
-            return WithToken($"{Config.Server}{ActressImage}{name}/{index}");
+            return ComposeUrl($"{ActressImage}{name}/{index}");
         }
 
         public static string GetPrimaryImageUrl(string vid)
         {
-            return WithToken($"{Config.Server}{PrimaryImage}{vid}");
+            return ComposeUrl($"{PrimaryImage}{vid}");
         }
 
         public static string GetThumbImageUrl(string vid)
         {
-            return WithToken($"{Config.Server}{ThumbImage}{vid}");
+            return ComposeUrl($"{ThumbImage}{vid}");
         }
 
         public static string GetBackdropImageUrl(string vid)
         {
-            return WithToken($"{Config.Server}{BackdropImage}{vid}");
+            return ComposeUrl($"{BackdropImage}{vid}");
         }
 
         /// <summary>
