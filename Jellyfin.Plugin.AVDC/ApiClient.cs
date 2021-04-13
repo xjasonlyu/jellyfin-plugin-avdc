@@ -52,9 +52,21 @@ namespace Jellyfin.Plugin.AVDC
 
         private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
-        private static string WithToken(string url)
+        private static string WithToken(string originUrl)
         {
-            return string.IsNullOrEmpty(Config.Token) ? url : $"{url}?token={HttpUtility.UrlEncode(Config.Token)}";
+            if (string.IsNullOrEmpty(Config.Token)) return originUrl;
+
+            var url = new Uri(originUrl);
+            var query = HttpUtility.ParseQueryString(url.Query);
+            query.Add("token", Config.Token);
+
+            return new UriBuilder(
+                    url.Scheme,
+                    url.Host,
+                    url.Port,
+                    url.AbsolutePath,
+                    query.ToString())
+                .ToString();
         }
 
         private static string GetActressUrl(string name)
