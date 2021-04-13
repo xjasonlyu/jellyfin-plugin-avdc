@@ -6,6 +6,15 @@
     "description": "Provides additional metadata for adult videos by AVDC.",
     "owner": "xjasonlyu",
     "overview": "AVDC Metadata Provider for Jellyfin",
-    "versions": []
+    "versions": [
+      {
+        "checksum": "5a85d7c82d8071e9be632f86203fe5c7",
+        "changelog": "Auto Released by Actions",
+        "targetAbi": "10.7.0.0",
+        "sourceUrl": "https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases/download/v2021.0413.0250/Jellyfin.AVDC@v2021.0413.0250.zip",
+        "timestamp": "2021-04-13T02:50:34Z",
+        "version": "2021.0413.0250"
+      }
+    ]
   }
 ]
