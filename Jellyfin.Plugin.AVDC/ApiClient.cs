@@ -257,6 +257,7 @@ namespace Jellyfin.Plugin.AVDC
             cancellationToken.ThrowIfCancellationRequested();
 
             var httpClient = _httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(60);
 
             var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
