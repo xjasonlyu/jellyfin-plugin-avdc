@@ -2,6 +2,8 @@
 
 ~~硬盘里的小姐姐总得有个身份~~
 
+![Thumb](Jellyfin.Plugin.AVDC/thumb.png)
+
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
 ![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/xjasonlyu/jellyfin-plugin-avdc)
@@ -38,7 +40,7 @@
 
 ## 安装
 
-Jellyfin >= 10.7.0 || Emby >= 4.5.4
+**Jellyfin >= 10.7.0 || Emby >= 4.5.4**
 
 ### 插件
 
