@@ -67,7 +67,8 @@ namespace Jellyfin.Plugin.AVDC.Providers
             if (!string.IsNullOrWhiteSpace(m.Studio)) studios.Add(m.Studio);
 
             // Use Series or Label as Tagline
-            var tagline = !string.IsNullOrWhiteSpace(m.Series) ? m.Series : m.Label;
+            var tagline = !string.IsNullOrWhiteSpace(m.Series) ? m.Series :
+                !string.IsNullOrWhiteSpace(m.Label) ? m.Label : string.Empty;
 
             var result = new MetadataResult<Movie>
             {
