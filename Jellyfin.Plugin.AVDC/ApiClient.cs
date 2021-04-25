@@ -54,8 +54,7 @@ namespace Jellyfin.Plugin.AVDC
 
         private static string ComposeUrl(string pathAndQuery)
         {
-            var originUrl = $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
-            return originUrl;
+            return $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
         }
 
         private static string GetActressUrl(string name)
