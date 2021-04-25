@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Jellyfin.Plugin.AVDC.Configuration;
 using Jellyfin.Plugin.AVDC.Models;
 using MediaBrowser.Model.Serialization;
@@ -13,6 +12,7 @@ using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 
 #else
+using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -55,15 +55,7 @@ namespace Jellyfin.Plugin.AVDC
         private static string ComposeUrl(string pathAndQuery)
         {
             var originUrl = $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
-
-            if (string.IsNullOrEmpty(Config.Token)) return originUrl;
-
-            var url = new UriBuilder(originUrl);
-            var query = HttpUtility.ParseQueryString(url.Query);
-            query.Add("token", Config.Token);
-            url.Query = query.ToString();
-
-            return url.ToString();
+            return originUrl;
         }
 
         private static string GetActressUrl(string name)
@@ -232,6 +224,10 @@ namespace Jellyfin.Plugin.AVDC
                 TimeoutMs = 60000
             };
 
+            // Add Auth Token Header
+            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
+                options.RequestHeaders.Add("Authorization", $"Bearer {Config.Token}");
+
             var response = await _httpClient.GetResponse(options).ConfigureAwait(false);
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new HttpRequestException($"Bad Status Code: {response.StatusCode}");
@@ -253,6 +249,11 @@ namespace Jellyfin.Plugin.AVDC
 
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(60);
+
+            // Add Auth Token Header
+            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", Config.Token);
 
             var response = await httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
