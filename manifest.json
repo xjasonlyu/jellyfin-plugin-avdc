@@ -8,22 +8,6 @@
     "overview": "AVDC Metadata Provider for Jellyfin",
     "versions": [
       {
-        "checksum": "566f6749605dd18e11ce59d670d79de8",
-        "changelog": "Auto Released by Actions",
-        "targetAbi": "10.7.0.0",
-        "sourceUrl": "https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases/download/v2021.0425.1110/Jellyfin.AVDC@v2021.0425.1110.zip",
-        "timestamp": "2021-04-25T11:11:01Z",
-        "version": "2021.0425.1110"
-      },
-      {
-        "checksum": "256bf85877d574cb56d49415bdac1377",
-        "changelog": "Auto Released by Actions",
-        "targetAbi": "10.7.0.0",
-        "sourceUrl": "https://github.com/xjasonlyu/jellyfin-plugin-avdc/releases/download/v2021.0425.1020/Jellyfin.AVDC@v2021.0425.1020.zip",
-        "timestamp": "2021-04-25T10:20:43Z",
-        "version": "2021.0425.1020"
-      },
-      {
         "checksum": "bf9d1ddfe9cf3ccf1651a6ea5ef5c4f8",
         "changelog": "Auto Released by Actions",
         "targetAbi": "10.7.0.0",
