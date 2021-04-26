@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Model.Entities;
@@ -50,11 +51,9 @@ namespace Jellyfin.Plugin.AVDC.Providers
 
         protected static string ExtractVid(string name)
         {
-            var vid = string.Empty;
-            foreach (var c in name)
-                if (c < 128) vid += c;
-                else break;
-            return vid;
+            var regex = new Regex(@"([A-Z0-9]+[_\-\.][A-Z0-9]+)", RegexOptions.IgnoreCase);
+            var match = regex.Match(name);
+            return !string.IsNullOrEmpty(match.Value) ? match.Value : name;
         }
 
         private static string[] ProviderNames => typeof(Constant).GetFields(BindingFlags.Public | BindingFlags.Static)
