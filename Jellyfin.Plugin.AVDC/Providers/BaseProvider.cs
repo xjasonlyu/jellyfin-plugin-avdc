@@ -56,6 +56,12 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return !string.IsNullOrEmpty(match.Value) ? match.Value : name;
         }
 
+        protected static string ExtractQuery(string name)
+        {
+            var i = name.IndexOf('?');
+            return i < 0 ? string.Empty : name.Substring(i, name.Length - i);
+        }
+
         private static string[] ProviderNames => typeof(Constant).GetFields(BindingFlags.Public | BindingFlags.Static)
             .Select(x => x.GetValue(null).ToString()).ToArray();
 
