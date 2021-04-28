@@ -121,7 +121,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             MovieInfo info, CancellationToken cancellationToken)
         {
             var vid = info.GetProviderId(Name);
-            if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name);
+            if (string.IsNullOrWhiteSpace(vid)) vid = ExtractVid(info.Name) + ExtractQuery(info.Name);
 
 #if __EMBY__
             Logger.Info("[AVDC] SearchResults for video: {0}", vid);
