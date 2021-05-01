@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using MediaBrowser.Controller.Providers;
 
@@ -45,6 +46,21 @@ namespace Jellyfin.Plugin.AVDC.Helpers
 
             return filename.Substring(Math.Max(0, filename.Length - 2))
                 .Equals("-C", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool HasExternalChineseSubtitle(string path)
+        {
+            return HasExternalChineseSubtitle(Path.GetFileNameWithoutExtension(path),
+                Directory.GetParent(path)?.GetFiles().Select(info => info.Name));
+        }
+
+        private static bool HasExternalChineseSubtitle(string basename, IEnumerable<string> files)
+        {
+            var r = new Regex(@"\.(chinese|chs|cht)\.(ass|srt|ssa|stl|sub|vid|vtt)$",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            return files.Any(name => r.IsMatch(name) &&
+                                     r.Replace(name, string.Empty)
+                                         .Equals(basename, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

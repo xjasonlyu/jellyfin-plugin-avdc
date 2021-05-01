@@ -86,10 +86,22 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                         genres[genres.IndexOf(genre)] = value; // replace
                 }
 
-                // Add `ChineseSubtitle` Genre
-                if (!genres.Contains(Genres.ChineseSubtitle) &&
-                    Genres.HasChineseSubtitle(item.FileNameWithoutExtension))
-                    genres.Add(Genres.ChineseSubtitle);
+                try
+                {
+                    // Add `ChineseSubtitle` Genre
+                    if (!genres.Contains(Genres.ChineseSubtitle) &&
+                        (Genres.HasChineseSubtitle(item.FileNameWithoutExtension) ||
+                         Genres.HasExternalChineseSubtitle(item.Path)))
+                        genres.Add(Genres.ChineseSubtitle);
+                }
+                catch (Exception e)
+                {
+#if __EMBY__
+                    _logger.Error("[AVDC] Chinese subtitle for video {0}: {1}", item.Name, e.Message);
+#else
+                    _logger.LogError("[AVDC] Chinese subtitle for video {Name}: {Message}", item.Name, e.Message);
+#endif
+                }
 
                 // Remove Duplicates
                 var orderedGenres = genres.Distinct().OrderByString(g => g).ToList();
