@@ -71,10 +71,7 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             {
                 progress?.Report((double) idx / items.Count * 100);
 
-                // Skip this item if empty
-                if (item.Genres == null || !item.Genres.Any()) continue;
-
-                var genres = item.Genres.ToList();
+                var genres = item.Genres?.ToList() ?? new List<string>();
 
                 // Replace Genres
                 foreach (var genre in genres.Where(genre => Genres.Substitution.ContainsKey(genre)).ToArray())
@@ -107,7 +104,9 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
                 var orderedGenres = genres.Distinct().OrderByString(g => g).ToList();
 
                 // Skip updating item if equal
-                if (item.Genres.SequenceEqual(orderedGenres, StringComparer.Ordinal)) continue;
+                if (!orderedGenres.Any() ||
+                    (item.Genres?.SequenceEqual(orderedGenres, StringComparer.Ordinal)).GetValueOrDefault(false))
+                    continue;
 
                 item.Genres = orderedGenres.ToArray();
 
