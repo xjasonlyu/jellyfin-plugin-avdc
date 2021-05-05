@@ -20,6 +20,10 @@
         <DefineConstants>__EMBY__</DefineConstants>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="System.Memory" Version="4.5.4" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
         <PackageReference Include="Jellyfin.Controller" Version="10.7.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
@@ -27,7 +31,6 @@
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
         <PackageReference Include="MediaBrowser.Server.Core" Version="4.5.0.28" />
-        <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
