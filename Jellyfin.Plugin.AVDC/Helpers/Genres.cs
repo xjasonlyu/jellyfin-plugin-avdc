@@ -56,7 +56,7 @@ namespace Jellyfin.Plugin.AVDC.Helpers
 
         private static bool HasExternalChineseSubtitle(string basename, IEnumerable<string> files)
         {
-            var r = new Regex(@"\.(chinese|chs|cht)\.(ass|srt|ssa|stl|sub|vid|vtt)$",
+            var r = new Regex(@"\.(chinese|chi|chs|cht)\.(ass|srt|ssa|stl|sub|vid|vtt)$",
                 RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
             return files.Any(name => r.IsMatch(name) &&
                                      r.Replace(name, string.Empty)
