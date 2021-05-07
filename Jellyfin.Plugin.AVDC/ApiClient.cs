@@ -26,8 +26,10 @@ namespace Jellyfin.Plugin.AVDC
         private const string PrimaryImage = "/image/primary/";
         private const string ThumbImage = "/image/thumb/";
         private const string BackdropImage = "/image/backdrop/";
+        private const string RemoteImage = "/image/remote/";
         private const string ActressImageInfo = "/imageinfo/actress/";
         private const string BackdropImageInfo = "/imageinfo/backdrop/";
+        private const string RemoteImageInfo = "/imageinfo/remote/";
 
 #if __EMBY__
         private readonly IHttpClient _httpClient;
@@ -95,6 +97,34 @@ namespace Jellyfin.Plugin.AVDC
         public static string GetBackdropImageUrl(string vid)
         {
             return ComposeUrl($"{BackdropImage}{vid}");
+        }
+
+        public static string GetRemoteImageUrl(string name, string url, double scale = 0)
+        {
+            return ComposeUrl($"{RemoteImage}{name}?scale={scale}&url={Uri.EscapeDataString(url)}");
+        }
+
+        private static string GetRemoteImageInfoUrl(string name, string url)
+        {
+            return ComposeUrl($"{RemoteImageInfo}{name}?url={Uri.EscapeDataString(url)}");
+        }
+
+        public async Task<ImageInfo> GetRemoteImageInfo(string name, string url, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var contentStream = await GetStream(GetRemoteImageInfoUrl(name, url), cancellationToken);
+                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
+            }
+            catch (Exception e)
+            {
+#if __EMBY__
+                _logger.Error("[AVDC] GetRemoteImageInfo for {0} failed: {1}", name, e.Message);
+#else
+                _logger.LogError("[AVDC] GetRemoteImageInfo for {Name} failed: {Message}", name, e.Message);
+#endif
+                return new ImageInfo();
+            }
         }
 
         /// <summary>

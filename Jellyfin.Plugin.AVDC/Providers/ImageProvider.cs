@@ -67,7 +67,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 Logger.LogWarning("[AVDC] Invalid ImageInfo: {Vid}", m.Vid);
 #endif
 
-            return new List<RemoteImageInfo>
+            var images = new List<RemoteImageInfo>
             {
                 new RemoteImageInfo
                 {
@@ -76,7 +76,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Width = (int) (imageInfo.Height * (2.0 / 3.0)),
                     Height = imageInfo.Height,
                     RatingType = RatingType.Likes,
-                    CommunityRating = 1, // default
+                    CommunityRating = m.Images.Length + 1, // default
                     Url = ApiClient.GetPrimaryImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
@@ -86,7 +86,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Width = imageInfo.Width,
                     Height = (int) (imageInfo.Width / (16.0 / 9.0)),
                     RatingType = RatingType.Likes,
-                    CommunityRating = 1, // default
+                    CommunityRating = m.Images.Length + 1, // default
                     Url = ApiClient.GetThumbImageUrl(m.Vid)
                 },
                 new RemoteImageInfo
@@ -96,10 +96,51 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     Width = imageInfo.Width,
                     Height = imageInfo.Height,
                     RatingType = RatingType.Likes,
-                    CommunityRating = 1, // default
+                    CommunityRating = m.Images.Length + 1, // default
                     Url = ApiClient.GetBackdropImageUrl(m.Vid)
                 }
             };
+
+            foreach (var (idx, imageUrl) in m.Images.WithIndex())
+            {
+                var nameId = $"{m.Vid}-{idx}";
+                imageInfo = await ApiClient.GetRemoteImageInfo(nameId, imageUrl, cancellationToken);
+
+                images.Add(new RemoteImageInfo
+                {
+                    ProviderName = Name,
+                    Type = ImageType.Primary,
+                    Width = (int) (imageInfo.Height * (2.0 / 3.0)),
+                    Height = imageInfo.Height,
+                    RatingType = RatingType.Likes,
+                    CommunityRating = m.Images.Length - idx,
+                    Url = ApiClient.GetRemoteImageUrl($"{nameId}-primary", imageUrl, 2.0 / 3.0)
+                });
+
+                images.Add(new RemoteImageInfo
+                {
+                    ProviderName = Name,
+                    Type = ImageType.Thumb,
+                    Width = imageInfo.Width,
+                    Height = (int) (imageInfo.Width / (16.0 / 9.0)),
+                    RatingType = RatingType.Likes,
+                    CommunityRating = m.Images.Length - idx,
+                    Url = ApiClient.GetRemoteImageUrl($"{nameId}-thumb", imageUrl, 16.0 / 9.0)
+                });
+
+                images.Add(new RemoteImageInfo
+                {
+                    ProviderName = Name,
+                    Type = ImageType.Backdrop,
+                    Width = imageInfo.Width,
+                    Height = imageInfo.Height,
+                    RatingType = RatingType.Likes,
+                    CommunityRating = m.Images.Length - idx,
+                    Url = ApiClient.GetRemoteImageUrl($"{nameId}-backdrop", imageUrl)
+                });
+            }
+
+            return images;
         }
 
         public bool Supports(BaseItem item)
