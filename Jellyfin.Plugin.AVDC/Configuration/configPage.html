@@ -14,13 +14,13 @@
             <p>Provides additional metadata for adult videos by AVDC.</p>
             <form id="avdcConfigForm">
                 <div class="inputContainer">
-                    <label class="inputeLabel inputLabelUnfocused" for="server">Server</label>
-                    <input id="server" is="emby-input" name="server" required type="text"/>
+                    <label class="inputeLabel inputLabelUnfocused" for="Server">Server</label>
+                    <input id="Server" is="emby-input" name="Server" required type="text"/>
                     <div class="fieldDescription">URL for Backend AVDC Server.</div>
                 </div>
                 <div class="inputContainer">
-                    <label class="inputeLabel inputLabelUnfocused" for="token">Token</label>
-                    <input id="token" is="emby-input" name="token" type="password"/>
+                    <label class="inputeLabel inputLabelUnfocused" for="Token">Token</label>
+                    <input id="Token" is="emby-input" name="Token" type="password"/>
                     <div class="fieldDescription">Token for Backend AVDC Server.</div>
                 </div>
                 <div class="checkboxContainer checkboxContainer-withDescripton">
@@ -45,8 +45,8 @@
         $('#avdcConfigurationPage').on('pageshow', function () {
             Dashboard.showLoadingMsg();
             ApiClient.getPluginConfiguration(avdcPluginConfig.uniquePluginId).then(function (config) {
-                $('#server').val(config.Server).change();
-                $('#token').val(config.Token).change();
+                $('#Server').val(config.Server).change();
+                $('#Token').val(config.Token).change();
                 $('#EnableRemoteImageInfo').prop('checked', config.EnableRemoteImageInfo);
                 Dashboard.hideLoadingMsg();
             });
@@ -55,8 +55,8 @@
         $('#avdcConfigForm').on('submit', function () {
             Dashboard.showLoadingMsg();
             ApiClient.getPluginConfiguration(avdcPluginConfig.uniquePluginId).then(function (config) {
-                config.Server = $('#server').val();
-                config.Token = $('#token').val();
+                config.Server = $('#Server').val();
+                config.Token = $('#Token').val();
                 config.EnableRemoteImageInfo = $('#EnableRemoteImageInfo').prop('checked');
                 ApiClient.updatePluginConfiguration(avdcPluginConfig.uniquePluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
             });
