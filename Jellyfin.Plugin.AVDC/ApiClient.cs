@@ -111,6 +111,8 @@ namespace Jellyfin.Plugin.AVDC
 
         public async Task<ImageInfo> GetRemoteImageInfo(string name, string url, CancellationToken cancellationToken)
         {
+            if (!Config.EnableRemoteImageInfo) return new ImageInfo();
+
             try
             {
                 var contentStream = await GetStream(GetRemoteImageInfoUrl(name, url), cancellationToken);

@@ -8,6 +8,7 @@ namespace Jellyfin.Plugin.AVDC.Configuration
         {
             Server = "http://avdc-api:5000";
             Token = string.Empty;
+            EnableRemoteImageInfo = true;
         }
 
         /// <summary>
@@ -19,5 +20,10 @@ namespace Jellyfin.Plugin.AVDC.Configuration
         ///     Gets or sets the AVDC server API token.
         /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        ///     Switch the AVDC server EnableRemoteImageInfo value.
+        /// </summary>
+        public bool EnableRemoteImageInfo { get; set; }
     }
 }

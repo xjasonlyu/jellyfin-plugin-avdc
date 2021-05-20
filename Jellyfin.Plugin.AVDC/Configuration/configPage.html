@@ -23,6 +23,13 @@
                     <input id="token" is="emby-input" name="token" type="password"/>
                     <div class="fieldDescription">Token for Backend AVDC Server.</div>
                 </div>
+                <div class="checkboxContainer checkboxContainer-withDescripton">
+                    <label class="emby-checkbox-label">
+                        <input id="EnableRemoteImageInfo" is="emby-checkbox" name="EnableRemoteImageInfo"
+                               type="checkbox"/>
+                        <span>Enable Remote Image Info</span>
+                    </label>
+                </div>
                 <div>
                     <button class="raised button-submit block" is="emby-button" type="submit">
                         <span>Save</span></button>
@@ -40,6 +47,7 @@
             ApiClient.getPluginConfiguration(avdcPluginConfig.uniquePluginId).then(function (config) {
                 $('#server').val(config.Server).change();
                 $('#token').val(config.Token).change();
+                $('#EnableRemoteImageInfo').prop('checked', config.EnableRemoteImageInfo);
                 Dashboard.hideLoadingMsg();
             });
         });
@@ -49,6 +57,7 @@
             ApiClient.getPluginConfiguration(avdcPluginConfig.uniquePluginId).then(function (config) {
                 config.Server = $('#server').val();
                 config.Token = $('#token').val();
+                config.EnableRemoteImageInfo = $('#EnableRemoteImageInfo').prop('checked');
                 ApiClient.updatePluginConfiguration(avdcPluginConfig.uniquePluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
             });
             return false;

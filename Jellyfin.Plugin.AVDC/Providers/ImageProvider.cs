@@ -73,7 +73,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
-                    Width = (int) (imageInfo.Height * (2.0 / 3.0)),
+                    Width = (int?) (imageInfo.Height * (2.0 / 3.0)),
                     Height = imageInfo.Height,
                     RatingType = RatingType.Likes,
                     CommunityRating = m.Images.Length + 1, // default
@@ -84,7 +84,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     ProviderName = Name,
                     Type = ImageType.Thumb,
                     Width = imageInfo.Width,
-                    Height = (int) (imageInfo.Width / (16.0 / 9.0)),
+                    Height = (int?) (imageInfo.Width / (16.0 / 9.0)),
                     RatingType = RatingType.Likes,
                     CommunityRating = m.Images.Length + 1, // default
                     Url = ApiClient.GetThumbImageUrl(m.Vid)
@@ -104,13 +104,14 @@ namespace Jellyfin.Plugin.AVDC.Providers
             foreach (var (idx, imageUrl) in m.Images.WithIndex())
             {
                 var nameId = $"{m.Vid}-{idx}";
-                imageInfo = await ApiClient.GetRemoteImageInfo(nameId, imageUrl, cancellationToken);
+                imageInfo = await ApiClient.GetRemoteImageInfo(nameId, imageUrl, cancellationToken)
+                    .ConfigureAwait(false);
 
                 images.Add(new RemoteImageInfo
                 {
                     ProviderName = Name,
                     Type = ImageType.Primary,
-                    Width = (int) (imageInfo.Height * (2.0 / 3.0)),
+                    Width = (int?) (imageInfo.Height * (2.0 / 3.0)),
                     Height = imageInfo.Height,
                     RatingType = RatingType.Likes,
                     CommunityRating = m.Images.Length - idx,
@@ -122,7 +123,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                     ProviderName = Name,
                     Type = ImageType.Thumb,
                     Width = imageInfo.Width,
-                    Height = (int) (imageInfo.Width / (16.0 / 9.0)),
+                    Height = (int?) (imageInfo.Width / (16.0 / 9.0)),
                     RatingType = RatingType.Likes,
                     CommunityRating = m.Images.Length - idx,
                     Url = ApiClient.GetRemoteImageUrl($"{nameId}-thumb", imageUrl, 16.0 / 9.0)
