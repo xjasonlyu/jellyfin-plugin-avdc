@@ -64,8 +64,9 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             var items = _libraryManager.GetItemList(new InternalItemsQuery
             {
                 MediaTypes = new[] {MediaType.Video},
-                IncludeItemTypes = new[] {nameof(Movie)}
-            }).Where(item => item.ProviderIds.ContainsKey(Constant.Avdc)).ToList();
+                IncludeItemTypes = new[] {nameof(Movie)},
+                HasAnyProviderId = new[] {Constant.Avdc}
+            }).ToList();
 
             foreach (var (idx, item) in items.WithIndex())
             {
