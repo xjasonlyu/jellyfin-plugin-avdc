@@ -65,7 +65,11 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
             {
                 MediaTypes = new[] {MediaType.Video},
                 IncludeItemTypes = new[] {nameof(Movie)},
+#if __EMBY__
                 HasAnyProviderId = new[] {Constant.Avdc}
+#else
+                HasAnyProviderId = new Dictionary<string, string> {{Constant.Avdc, string.Empty}}
+#endif
             }).ToList();
 
             foreach (var (idx, item) in items.WithIndex())
