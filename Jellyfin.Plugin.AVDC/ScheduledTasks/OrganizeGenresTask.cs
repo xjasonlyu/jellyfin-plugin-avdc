@@ -90,11 +90,12 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
 
                 try
                 {
-                    // Add `ChineseSubtitle` Genre
-                    if (!genres.Contains(Genres.ChineseSubtitle) &&
-                        (Genres.HasChineseSubtitle(item.FileNameWithoutExtension) ||
-                         Genres.HasExternalChineseSubtitle(item.Path)))
+                    // Add or Remove `ChineseSubtitle` Genre
+                    if (Genres.HasChineseSubtitle(item.FileNameWithoutExtension) ||
+                        Genres.HasExternalChineseSubtitle(item.Path))
                         genres.Add(Genres.ChineseSubtitle);
+                    else
+                        genres.RemoveAll(s => s.Equals(Genres.ChineseSubtitle));
                 }
                 catch (Exception e)
                 {
