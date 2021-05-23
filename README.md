@@ -1,9 +1,9 @@
 # AVDC Plugin for Jellyfin/Emby
 
-<h2 align="center">
+<h3 align="center">
   <img src="https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/tg-qrcode.png" alt="TG" width="256">
   <br>Telegram Group ⬆️<br>
-</h2>
+</h3>
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
 ![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
