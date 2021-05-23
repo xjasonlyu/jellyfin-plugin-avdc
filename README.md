@@ -1,7 +1,7 @@
 # AVDC Plugin for Jellyfin/Emby
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/tg.png" alt="TG" width="256">
+  <img src="https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/tg-qrcode.png" alt="TG" width="256">
   <br>Telegram Group ⬆️<br>
 </h2>
 
