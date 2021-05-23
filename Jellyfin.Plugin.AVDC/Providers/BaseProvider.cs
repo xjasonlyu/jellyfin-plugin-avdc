@@ -69,7 +69,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
                 .Replace("item_", string.Empty)
                 .Replace(".html", string.Empty);
 
-            return s.Substring(s.LastIndexOf('/')).TrimStart('/');
+            return s.LastIndexOf('/') > 0 ? s.Substring(s.LastIndexOf('/')).TrimEnd('/') : s;
         }
 
         private static string[] ProviderNames => typeof(Constant).GetFields(BindingFlags.Public | BindingFlags.Static)
