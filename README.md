@@ -1,8 +1,9 @@
 # AVDC Plugin for Jellyfin/Emby
 
-~~硬盘里的小姐姐总得有个身份~~
-
-![Thumb](Jellyfin.Plugin.AVDC/thumb.png)
+<h2 align="center">
+  <img src="https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/tg.png" alt="TG" width="256">
+  <br>Telegram Group ⬆️<br>
+</h2>
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
 ![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
