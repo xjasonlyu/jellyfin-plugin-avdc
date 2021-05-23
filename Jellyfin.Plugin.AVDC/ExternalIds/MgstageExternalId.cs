@@ -18,7 +18,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #endif
         public string Key => Constant.Mgstage;
 
-        public string UrlFormatString => "{0}";
+        public string UrlFormatString => "https://www.mgstage.com/product/product_detail/{0}/";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;

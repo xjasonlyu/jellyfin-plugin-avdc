@@ -18,7 +18,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #endif
         public string Key => Constant.Jav321;
 
-        public string UrlFormatString => "{0}";
+        public string UrlFormatString => "https://www.jav321.com/video/{0}";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;

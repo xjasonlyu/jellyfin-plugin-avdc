@@ -62,6 +62,16 @@ namespace Jellyfin.Plugin.AVDC.Providers
             return i < 0 ? string.Empty : name.Substring(i, name.Length - i);
         }
 
+        private static string ExtractExternalId(string s)
+        {
+            s = s.TrimEnd('/')
+                .Replace("cid=", string.Empty)
+                .Replace("item_", string.Empty)
+                .Replace(".html", string.Empty);
+
+            return s.Substring(s.LastIndexOf('/')).TrimStart('/');
+        }
+
         private static string[] ProviderNames => typeof(Constant).GetFields(BindingFlags.Public | BindingFlags.Static)
             .Select(x => x.GetValue(null).ToString()).ToArray();
 
@@ -71,7 +81,7 @@ namespace Jellyfin.Plugin.AVDC.Providers
             {
                 var name = Array.Find(ProviderNames, e => e.Equals(providers[i], StringComparison.OrdinalIgnoreCase));
                 if (!string.IsNullOrEmpty(name) && !name.Equals(Constant.Avdc))
-                    item.SetProviderId(name, sources[i]);
+                    item.SetProviderId(name, ExtractExternalId(sources[i]));
             }
         }
     }

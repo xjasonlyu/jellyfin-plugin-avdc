@@ -18,7 +18,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #endif
         public string Key => Constant.Fanza;
 
-        public string UrlFormatString => "{0}";
+        public string UrlFormatString => "https://www.dmm.co.jp/digital/videoa/-/detail/=/cid={0}/";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;

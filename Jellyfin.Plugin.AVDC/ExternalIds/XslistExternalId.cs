@@ -18,7 +18,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #endif
         public string Key => Constant.Xslist;
 
-        public string UrlFormatString => "{0}";
+        public string UrlFormatString => "https://xslist.org/zh/model/{0}.html";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Person;

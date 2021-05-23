@@ -18,7 +18,7 @@ namespace Jellyfin.Plugin.AVDC.ExternalIds
 #endif
         public string Key => Constant.JavDb;
 
-        public string UrlFormatString => "{0}";
+        public string UrlFormatString => "https://javdb.com/v/{0}";
 
 #if !__EMBY__
         public ExternalIdMediaType? Type => ExternalIdMediaType.Movie;
