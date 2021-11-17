@@ -1,10 +1,5 @@
 # Metadata Provider Plugin for Jellyfin/Emby
 
-<h3 align="center">
-  <img src="https://raw.githubusercontent.com/xjasonlyu/jellyfin-plugin-avdc/main/tg-qrcode.png" alt="TG" width="256">
-  <br>Telegram Group ⬆️<br>
-</h3>
-
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xjasonlyu/jellyfin-plugin-avdc/Build%20Plugin)
 ![GitHub](https://img.shields.io/github/license/xjasonlyu/jellyfin-plugin-avdc)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/xjasonlyu/jellyfin-plugin-avdc)
@@ -39,10 +34,6 @@
   - 自动更新插件（Emby only）
 - 封面**自动人脸识别**
 - 超级快的刮削速度
-
-## 截图
-
-见➡️：[效果预览](preview/README.md)
 
 ## 安装
 
