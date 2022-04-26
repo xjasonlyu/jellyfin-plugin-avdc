@@ -10,6 +10,7 @@ using MediaBrowser.Model.Serialization;
 using System.Net;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
+using HttpRequestOptions = MediaBrowser.Common.Net.HttpRequestOptions;
 
 #else
 using System.Net.Http.Headers;

@@ -118,7 +118,7 @@ namespace Jellyfin.Plugin.AVDC.ScheduledTasks
 
 #if __EMBY__
                 _logger.Info("[AVDC] OrganizeGenres for video: {0}", item.Name);
-                _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit);
+                _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit, null);
 #else
                 _logger.LogInformation("[AVDC] OrganizeGenres for video: {Name}", item.Name);
                 await _libraryManager

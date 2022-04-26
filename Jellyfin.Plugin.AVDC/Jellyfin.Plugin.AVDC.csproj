@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">net5.0</TargetFramework>
-        <TargetFramework Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">netstandard2.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>AVDC</AssemblyName>
         <RootNamespace>Jellyfin.Plugin.AVDC</RootNamespace>
         <Copyright>Copyright © $([System.DateTime]::UtcNow.Year) AVDC</Copyright>
@@ -25,12 +24,12 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
-        <PackageReference Include="Jellyfin.Controller" Version="10.7.5" />
+        <PackageReference Include="Jellyfin.Controller" Version="10.7.7" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
-        <PackageReference Include="MediaBrowser.Server.Core" Version="4.6.0.50" />
+        <PackageReference Include="MediaBrowser.Server.Core" Version="4.7.0.30" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
