@@ -11,6 +11,7 @@ using System.Net;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 using HttpRequestOptions = MediaBrowser.Common.Net.HttpRequestOptions;
+
 #else
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
@@ -114,7 +115,10 @@ public sealed class ApiClient
         try
         {
             var contentStream = await GetStream(GetRemoteImageInfoUrl(name, url), cancellationToken);
-            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (Exception e)
         {
@@ -140,7 +144,10 @@ public sealed class ApiClient
         try
         {
             var contentStream = await GetStream(GetActressImageInfoUrl(name, index), cancellationToken);
-            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (Exception e)
         {
@@ -164,7 +171,10 @@ public sealed class ApiClient
         try
         {
             var contentStream = await GetStream(GetBackdropImageInfoUrl(vid), cancellationToken);
-            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (Exception e)
         {
@@ -198,7 +208,10 @@ public sealed class ApiClient
         try
         {
             var contentStream = await GetStream(GetMetadataUrl(vid), cancellationToken);
-            return JsonSerializer.Deserialize<Metadata>(contentStream);
+            return JsonSerializer.Deserialize<Metadata>(contentStream, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (Exception e)
         {
@@ -222,7 +235,10 @@ public sealed class ApiClient
         try
         {
             var contentStream = await GetStream(GetActressUrl(name), cancellationToken);
-            return JsonSerializer.Deserialize<Actress>(contentStream);
+            return JsonSerializer.Deserialize<Actress>(contentStream, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
         catch (Exception e)
         {
