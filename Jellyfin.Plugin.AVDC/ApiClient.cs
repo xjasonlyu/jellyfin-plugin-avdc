@@ -1,271 +1,268 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.AVDC.Configuration;
 using Jellyfin.Plugin.AVDC.Models;
-using MediaBrowser.Model.Serialization;
 #if __EMBY__
 using System.Net;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 using HttpRequestOptions = MediaBrowser.Common.Net.HttpRequestOptions;
-
 #else
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 #endif
 
-namespace Jellyfin.Plugin.AVDC
+namespace Jellyfin.Plugin.AVDC;
+
+public sealed class ApiClient
 {
-    public sealed class ApiClient
-    {
-        private const string Actress = "/actress/";
-        private const string Metadata = "/metadata/";
-        private const string ActressImage = "/image/actress/";
-        private const string PrimaryImage = "/image/primary/";
-        private const string ThumbImage = "/image/thumb/";
-        private const string BackdropImage = "/image/backdrop/";
-        private const string RemoteImage = "/image/remote/";
-        private const string ActressImageInfo = "/imageinfo/actress/";
-        private const string BackdropImageInfo = "/imageinfo/backdrop/";
-        private const string RemoteImageInfo = "/imageinfo/remote/";
+    private const string Actress = "/actress/";
+    private const string Metadata = "/metadata/";
+    private const string ActressImage = "/image/actress/";
+    private const string PrimaryImage = "/image/primary/";
+    private const string ThumbImage = "/image/thumb/";
+    private const string BackdropImage = "/image/backdrop/";
+    private const string RemoteImage = "/image/remote/";
+    private const string ActressImageInfo = "/imageinfo/actress/";
+    private const string BackdropImageInfo = "/imageinfo/backdrop/";
+    private const string RemoteImageInfo = "/imageinfo/remote/";
 
 #if __EMBY__
-        private readonly IHttpClient _httpClient;
+    private readonly IHttpClient _httpClient;
 #else
         private readonly IHttpClientFactory _httpClientFactory;
 #endif
-        private readonly ILogger _logger;
-        private readonly IJsonSerializer _jsonSerializer;
+    private readonly ILogger _logger;
 
 #if __EMBY__
-        public ApiClient(IHttpClient httpClient, IJsonSerializer jsonSerializer, ILogger logger)
-        {
-            _httpClient = httpClient;
+    public ApiClient(IHttpClient httpClient, ILogger logger)
+    {
+        _httpClient = httpClient;
 #else
-        public ApiClient(IHttpClientFactory httpClientFactory, IJsonSerializer jsonSerializer, ILogger logger)
+        public ApiClient(IHttpClientFactory httpClientFactory, ILogger logger)
         {
             _httpClientFactory = httpClientFactory;
 #endif
-            _logger = logger;
-            _jsonSerializer = jsonSerializer;
-        }
+        _logger = logger;
+    }
 
-        private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
+    private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
 
-        private static string ComposeUrl(string pathAndQuery)
+    private static string ComposeUrl(string pathAndQuery)
+    {
+        return $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
+    }
+
+    private static string GetActressUrl(string name)
+    {
+        return ComposeUrl($"{Actress}{name}");
+    }
+
+    private static string GetMetadataUrl(string vid)
+    {
+        return ComposeUrl($"{Metadata}{vid}");
+    }
+
+    private static string GetActressImageInfoUrl(string name, int index)
+    {
+        return ComposeUrl($"{ActressImageInfo}{name}/{index}");
+    }
+
+    private static string GetBackdropImageInfoUrl(string vid)
+    {
+        return ComposeUrl($"{BackdropImageInfo}{vid}");
+    }
+
+    public static string GetActressImageUrl(string name, int index = 0)
+    {
+        return ComposeUrl($"{ActressImage}{name}/{index}");
+    }
+
+    public static string GetPrimaryImageUrl(string vid)
+    {
+        return ComposeUrl($"{PrimaryImage}{vid}");
+    }
+
+    public static string GetThumbImageUrl(string vid)
+    {
+        return ComposeUrl($"{ThumbImage}{vid}");
+    }
+
+    public static string GetBackdropImageUrl(string vid)
+    {
+        return ComposeUrl($"{BackdropImage}{vid}");
+    }
+
+    public static string GetRemoteImageUrl(string name, string url, double scale = 0)
+    {
+        return ComposeUrl($"{RemoteImage}{name}?scale={scale}&url={Uri.EscapeDataString(url)}");
+    }
+
+    private static string GetRemoteImageInfoUrl(string name, string url)
+    {
+        return ComposeUrl($"{RemoteImageInfo}{name}?url={Uri.EscapeDataString(url)}");
+    }
+
+    public async Task<ImageInfo> GetRemoteImageInfo(string name, string url, CancellationToken cancellationToken)
+    {
+        if (!Config.EnableRemoteImageInfo) return new ImageInfo();
+
+        try
         {
-            return $"{Config.Server.TrimEnd('/')}{pathAndQuery}";
+            var contentStream = await GetStream(GetRemoteImageInfoUrl(name, url), cancellationToken);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
         }
-
-        private static string GetActressUrl(string name)
+        catch (Exception e)
         {
-            return ComposeUrl($"{Actress}{name}");
-        }
-
-        private static string GetMetadataUrl(string vid)
-        {
-            return ComposeUrl($"{Metadata}{vid}");
-        }
-
-        private static string GetActressImageInfoUrl(string name, int index)
-        {
-            return ComposeUrl($"{ActressImageInfo}{name}/{index}");
-        }
-
-        private static string GetBackdropImageInfoUrl(string vid)
-        {
-            return ComposeUrl($"{BackdropImageInfo}{vid}");
-        }
-
-        public static string GetActressImageUrl(string name, int index = 0)
-        {
-            return ComposeUrl($"{ActressImage}{name}/{index}");
-        }
-
-        public static string GetPrimaryImageUrl(string vid)
-        {
-            return ComposeUrl($"{PrimaryImage}{vid}");
-        }
-
-        public static string GetThumbImageUrl(string vid)
-        {
-            return ComposeUrl($"{ThumbImage}{vid}");
-        }
-
-        public static string GetBackdropImageUrl(string vid)
-        {
-            return ComposeUrl($"{BackdropImage}{vid}");
-        }
-
-        public static string GetRemoteImageUrl(string name, string url, double scale = 0)
-        {
-            return ComposeUrl($"{RemoteImage}{name}?scale={scale}&url={Uri.EscapeDataString(url)}");
-        }
-
-        private static string GetRemoteImageInfoUrl(string name, string url)
-        {
-            return ComposeUrl($"{RemoteImageInfo}{name}?url={Uri.EscapeDataString(url)}");
-        }
-
-        public async Task<ImageInfo> GetRemoteImageInfo(string name, string url, CancellationToken cancellationToken)
-        {
-            if (!Config.EnableRemoteImageInfo) return new ImageInfo();
-
-            try
-            {
-                var contentStream = await GetStream(GetRemoteImageInfoUrl(name, url), cancellationToken);
-                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
-            }
-            catch (Exception e)
-            {
 #if __EMBY__
-                _logger.Error("[AVDC] GetRemoteImageInfo for {0} failed: {1}", name, e.Message);
+            _logger.Error("[AVDC] GetRemoteImageInfo for {0} failed: {1}", name, e.Message);
 #else
                 _logger.LogError("[AVDC] GetRemoteImageInfo for {Name} failed: {Message}", name, e.Message);
 #endif
-                return new ImageInfo();
-            }
+            return new ImageInfo();
         }
+    }
 
-        /// <summary>
-        ///     Get Actress Image Info by Name.
-        /// </summary>
-        /// <param name="name">Actress Name.</param>
-        /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <param name="index">Image Index Number.</param>
-        /// <returns>ImageInfo.</returns>
-        public async Task<ImageInfo> GetActressImageInfo(string name, CancellationToken cancellationToken,
-            int index = 0)
+    /// <summary>
+    ///     Get Actress Image Info by Name.
+    /// </summary>
+    /// <param name="name">Actress Name.</param>
+    /// <param name="cancellationToken">Used to cancel the request.</param>
+    /// <param name="index">Image Index Number.</param>
+    /// <returns>ImageInfo.</returns>
+    public async Task<ImageInfo> GetActressImageInfo(string name, CancellationToken cancellationToken,
+        int index = 0)
+    {
+        try
         {
-            try
-            {
-                var contentStream = await GetStream(GetActressImageInfoUrl(name, index), cancellationToken);
-                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
-            }
-            catch (Exception e)
-            {
+            var contentStream = await GetStream(GetActressImageInfoUrl(name, index), cancellationToken);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
+        }
+        catch (Exception e)
+        {
 #if __EMBY__
-                _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", name, e.Message);
+            _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", name, e.Message);
 #else
                 _logger.LogError("[AVDC] GetActressImageInfo for {Name} failed: {Message}", name, e.Message);
 #endif
-                return new ImageInfo();
-            }
+            return new ImageInfo();
         }
+    }
 
-        /// <summary>
-        ///     Get Backdrop Image Info by Vid.
-        /// </summary>
-        /// <param name="vid">Video ID.</param>
-        /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <returns>ImageInfo.</returns>
-        public async Task<ImageInfo> GetBackdropImageInfo(string vid, CancellationToken cancellationToken)
+    /// <summary>
+    ///     Get Backdrop Image Info by Vid.
+    /// </summary>
+    /// <param name="vid">Video ID.</param>
+    /// <param name="cancellationToken">Used to cancel the request.</param>
+    /// <returns>ImageInfo.</returns>
+    public async Task<ImageInfo> GetBackdropImageInfo(string vid, CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                var contentStream = await GetStream(GetBackdropImageInfoUrl(vid), cancellationToken);
-                return _jsonSerializer.DeserializeFromStream<ImageInfo>(contentStream);
-            }
-            catch (Exception e)
-            {
+            var contentStream = await GetStream(GetBackdropImageInfoUrl(vid), cancellationToken);
+            return JsonSerializer.Deserialize<ImageInfo>(contentStream);
+        }
+        catch (Exception e)
+        {
 #if __EMBY__
-                _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", vid, e.Message);
+            _logger.Error("[AVDC] GetActressImageInfo for {0} failed: {1}", vid, e.Message);
 #else
                 _logger.LogError("[AVDC] GetActressImageInfo for {Vid} failed: {Message}", vid, e.Message);
 #endif
-                return new ImageInfo();
-            }
+            return new ImageInfo();
         }
+    }
 
-        /// <summary>
-        ///     Get Video Metadata by Vid.
-        /// </summary>
-        /// <param name="vid">Video ID.</param>
-        /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <returns>Video Metadata.</returns>
-        public async Task<Metadata> GetMetadata(string vid, CancellationToken cancellationToken)
+    /// <summary>
+    ///     Get Video Metadata by Vid.
+    /// </summary>
+    /// <param name="vid">Video ID.</param>
+    /// <param name="cancellationToken">Used to cancel the request.</param>
+    /// <returns>Video Metadata.</returns>
+    public async Task<Metadata> GetMetadata(string vid, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(vid))
         {
-            if (string.IsNullOrWhiteSpace(vid))
-            {
 #if __EMBY__
-                _logger.Error("[AVDC] invalid vid: \"{0}\"", vid);
+            _logger.Error("[AVDC] invalid vid: \"{0}\"", vid);
 #else
                 _logger.LogError("[AVDC] invalid vid: \"{Vid}\"", vid);
 #endif
-                return new Metadata();
-            }
+            return new Metadata();
+        }
 
-            try
-            {
-                var contentStream = await GetStream(GetMetadataUrl(vid), cancellationToken);
-                return _jsonSerializer.DeserializeFromStream<Metadata>(contentStream);
-            }
-            catch (Exception e)
-            {
+        try
+        {
+            var contentStream = await GetStream(GetMetadataUrl(vid), cancellationToken);
+            return JsonSerializer.Deserialize<Metadata>(contentStream);
+        }
+        catch (Exception e)
+        {
 #if __EMBY__
-                _logger.Error("[AVDC] GetMetadata for {0} failed: {1}", vid, e.Message);
+            _logger.Error("[AVDC] GetMetadata for {0} failed: {1}", vid, e.Message);
 #else
                 _logger.LogError("[AVDC] GetMetadata for {Vid} failed: {Message}", vid, e.Message);
 #endif
-                return new Metadata();
-            }
+            return new Metadata();
         }
+    }
 
-        /// <summary>
-        ///     Get Actress Info by Name.
-        /// </summary>
-        /// <param name="name">Actress Name.</param>
-        /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <returns>Actress Info.</returns>
-        public async Task<Actress> GetActress(string name, CancellationToken cancellationToken)
+    /// <summary>
+    ///     Get Actress Info by Name.
+    /// </summary>
+    /// <param name="name">Actress Name.</param>
+    /// <param name="cancellationToken">Used to cancel the request.</param>
+    /// <returns>Actress Info.</returns>
+    public async Task<Actress> GetActress(string name, CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                var contentStream = await GetStream(GetActressUrl(name), cancellationToken);
-                return _jsonSerializer.DeserializeFromStream<Actress>(contentStream);
-            }
-            catch (Exception e)
-            {
+            var contentStream = await GetStream(GetActressUrl(name), cancellationToken);
+            return JsonSerializer.Deserialize<Actress>(contentStream);
+        }
+        catch (Exception e)
+        {
 #if __EMBY__
-                _logger.Error("[AVDC] GetActress for {0} failed: {1}", name, e.Message);
+            _logger.Error("[AVDC] GetActress for {0} failed: {1}", name, e.Message);
 #else
                 _logger.LogError("[AVDC] GetActress for {Name} failed: {Message}", name, e.Message);
 #endif
-                return new Actress();
-            }
+            return new Actress();
         }
+    }
 
 
 #if __EMBY__
-        /// <summary>
-        ///     Get the response by HTTP without any other options.
-        /// </summary>
-        /// <param name="url">Request URL.</param>
-        /// <param name="cancellationToken">Used to cancel the request.</param>
-        /// <returns>HttpResponseInfo.</returns>
-        public async Task<HttpResponseInfo> GetAsync(string url, CancellationToken cancellationToken)
+    /// <summary>
+    ///     Get the response by HTTP without any other options.
+    /// </summary>
+    /// <param name="url">Request URL.</param>
+    /// <param name="cancellationToken">Used to cancel the request.</param>
+    /// <returns>HttpResponseInfo.</returns>
+    public async Task<HttpResponseInfo> GetAsync(string url, CancellationToken cancellationToken)
+    {
+        var options = new HttpRequestOptions
         {
-            var options = new HttpRequestOptions
-            {
-                Url = url,
-                CancellationToken = cancellationToken,
-                EnableDefaultUserAgent = true,
-                TimeoutMs = 60000
-            };
+            Url = url,
+            CancellationToken = cancellationToken,
+            EnableDefaultUserAgent = true,
+            TimeoutMs = 60000
+        };
 
-            // Add Auth Token Header
-            if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
-                options.RequestHeaders.Add("Authorization", $"Bearer {Config.Token}");
+        // Add Auth Token Header
+        if (!string.IsNullOrEmpty(Config.Token) && url.StartsWith(Config.Server))
+            options.RequestHeaders.Add("Authorization", $"Bearer {Config.Token}");
 
-            var response = await _httpClient.GetResponse(options).ConfigureAwait(false);
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new HttpRequestException($"Bad Status Code: {response.StatusCode}");
+        var response = await _httpClient.GetResponse(options).ConfigureAwait(false);
+        if (response.StatusCode != HttpStatusCode.OK)
+            throw new HttpRequestException($"Bad Status Code: {response.StatusCode}");
 
-            return response;
-        }
+        return response;
+    }
 #else
         /// <summary>
         ///     Get the response by HTTP without any other options.
@@ -293,14 +290,13 @@ namespace Jellyfin.Plugin.AVDC
         }
 #endif
 
-        private async Task<Stream> GetStream(string url, CancellationToken cancellationToken)
-        {
-            var response = await GetAsync(url, cancellationToken);
+    private async Task<Stream> GetStream(string url, CancellationToken cancellationToken)
+    {
+        var response = await GetAsync(url, cancellationToken);
 #if __EMBY__
-            return response.Content;
+        return response.Content;
 #else
             return await response.Content.ReadAsStreamAsync(cancellationToken);
 #endif
-        }
     }
 }

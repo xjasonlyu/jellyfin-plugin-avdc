@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jellyfin.Plugin.AVDC.Extensions
+namespace Jellyfin.Plugin.AVDC.Extensions;
+
+internal static class EnumerableExtension
 {
-    internal static class EnumerableExtension
+    public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> source)
     {
-        public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> source)
-        {
-            return source.Select((item, index) => (index, item));
-        }
+        return source.Select((item, index) => (index, item));
     }
 }
