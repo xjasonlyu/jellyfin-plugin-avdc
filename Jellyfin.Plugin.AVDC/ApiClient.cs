@@ -235,7 +235,6 @@ public sealed class ApiClient
         }
     }
 
-
 #if __EMBY__
     /// <summary>
     ///     Get the response by HTTP without any other options.
